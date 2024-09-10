@@ -24,19 +24,19 @@ import { RouterLink } from "vue-router";
         >
       </v-col>
       <v-col cols="6" md="4" class="col">
-        <RouterLink>
+        <RouterLink to="/">
           <v-icon class="icon" icon="mdi-folder"></v-icon>
           <br />PlaceHolder
         </RouterLink>
       </v-col>
       <v-col cols="6" md="4" class="col">
-        <RouterLink>
+        <RouterLink to="/">
           <v-icon class="icon" icon="mdi-folder"></v-icon>
           <br />PlaceHolder
         </RouterLink>
       </v-col>
       <v-col cols="6" md="4" class="col">
-        <RouterLink>
+        <RouterLink to="/">
           <v-icon class="icon" icon="mdi-folder"></v-icon>
           <br />PlaceHolder
         </RouterLink>
@@ -51,8 +51,9 @@ import { RouterLink } from "vue-router";
   padding-bottom: 0;
 }
 .containerRow {
-  height: 100vh;
+  height: 90vh;
   margin: 0;
+  overflow: hidden;
 }
 .col {
   text-align: center;

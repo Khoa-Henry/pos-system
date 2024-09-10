@@ -12,6 +12,9 @@ import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 
+//Store
+import { createPinia } from "pinia";
+
 const vuetify = createVuetify({
   theme: {
     defaultTheme: "light",
@@ -27,7 +30,9 @@ const vuetify = createVuetify({
   directives,
 });
 
+const pinia = createPinia();
+
 const app = createApp(App);
-app.use(vuetify).use(router);
+app.use(vuetify).use(router).use(pinia);
 
 app.mount("#app");
