@@ -1,7 +1,9 @@
 <script setup>
 import { RouterLink } from "vue-router";
 import { useInventoryListStore } from "../../store/inventoryList";
+import { useSelectedItemsStore } from "@/store/selectedItems";
 
+useSelectedItemsStore();
 const data = useInventoryListStore();
 </script>
 
@@ -17,8 +19,8 @@ const data = useInventoryListStore();
 
     <v-row no-gutters class="containerRow">
       <v-col cols="6" md="3" lg="2">
-        {{ data.$state.inventorySystem[0].categoryName }}
-        {{ data.inventorySystem[0].categoryName }}
+        {{ data.$state.value[0].categoryName }}
+        {{ data.value[0].categoryName }}
       </v-col>
       <v-col cols="6" md="5" lg="5">items</v-col>
       <v-col cols="12" md="4" lg="5">checkout</v-col>

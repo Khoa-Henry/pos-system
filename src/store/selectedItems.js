@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
-import { inventoryList } from "../constant";
 
-export const useInventoryListStore = defineStore("inventoryList", {
+export const useSelectedItemsStore = defineStore("selectedItems", {
   state: () => {
-    return { value: inventoryList };
+    return { items: [], totalPrice: 0.0 };
   },
 
   //   actions: {

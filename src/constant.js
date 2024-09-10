@@ -1,4 +1,4 @@
-export const inventorySystem = [
+export const inventoryList = [
   {
     categoryName: "Electronics",
     categoryId: 1,
