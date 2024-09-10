@@ -42,7 +42,7 @@ export const inventoryList = [
     ],
   },
   {
-    categoryName: "furniture",
+    categoryName: "Furniture",
     categoryId: 2,
     items: [
       {
@@ -84,7 +84,7 @@ export const inventoryList = [
     ],
   },
   {
-    categoryName: "lighting",
+    categoryName: "Lighting",
     categoryId: 3,
     items: [
       {
@@ -126,7 +126,7 @@ export const inventoryList = [
     ],
   },
   {
-    categoryName: "stationery",
+    categoryName: "Stationery",
     categoryId: 4,
     items: [
       {
