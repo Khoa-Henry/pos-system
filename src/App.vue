@@ -3,14 +3,7 @@ import { RouterView } from "vue-router";
 </script>
 
 <template>
-  <div class="root">
-    <RouterView />
-  </div>
+  <RouterView />
 </template>
 
-<style scoped>
-.root {
-  background-color: gray;
-  height: 100vh;
-}
-</style>
+<style scoped></style>
