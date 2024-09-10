@@ -3,7 +3,10 @@ import { RouterLink } from "vue-router";
 import { useInventoryListStore } from "../../store/inventoryList";
 // import { useSelectedItemsStore } from "@/store/selectedItems";
 
-const data = useInventoryListStore();
+const store = useInventoryListStore();
+const allItems = store.value.flatMap((category) => category.items);
+
+console.log(allItems);
 </script>
 
 <template>
@@ -26,10 +29,12 @@ const data = useInventoryListStore();
       >
         <div class="outlineContainer">
           <div class="spacing" style="padding-top: 10px">
-            <v-btn variant="outlined" block>See all</v-btn>
+            <v-btn variant="outlined" block class="text-none">See all</v-btn>
           </div>
-          <div v-for="category in data.value" class="spacing">
-            <v-btn variant="outlined" block>{{ category.categoryName }}</v-btn>
+          <div v-for="category in store.value" class="spacing">
+            <v-btn variant="outlined" block class="text-none">
+              {{ category.categoryName }}
+            </v-btn>
           </div>
           <div class="spacing" style="padding-bottom: 8px">
             <v-btn variant="outlined" block>+</v-btn>
@@ -43,32 +48,57 @@ const data = useInventoryListStore();
         class="itemCol"
         style="padding: 6px 6px 0px 6px"
       >
-        <v-row no-gutters class="outlineContainer spacing">
-          <v-col cols="12" class="spacing" style="padding-top: 10px">
-            <v-text-field
-              label="Search"
-              prepend-inner-icon="mdi-magnify"
-              variant="outlined"
-              hide-details
-              single-line
-              clearable
-              dense
+        <div class="outlineContainer">
+          <v-row no-gutters>
+            <v-col cols="12" style="padding: 10px 10px 5px 10px">
+              <v-text-field
+                label="Search"
+                prepend-inner-icon="mdi-magnify"
+                variant="outlined"
+                hide-details
+                single-line
+                clearable
+                dense
+              >
+              </v-text-field>
+            </v-col>
+
+            <v-col
+              cols="12"
+              md="6"
+              lg="4"
+              v-for="item in allItems"
+              style="padding: 5px 10px"
             >
-            </v-text-field>
-          </v-col>
-
-          <v-col cols="12" v-for="category in data.value" class="spacing">
-            <div v-for="item in category.items">
-              <v-btn variant="outlined" block style="font-size: 12px">
-                {{ item.itemName }}
+              <v-btn variant="outlined" block class="text-none" height="auto">
+                <v-row no-gutters>
+                  <v-col style="padding: 6px" cols="12">
+                    {{ item.itemName }}
+                  </v-col>
+                  <v-col style="padding: 6px" cols="12">
+                    <v-divider class="border-opacity-100"></v-divider>
+                  </v-col>
+                  <v-col style="padding: 6px" cols="6">
+                    QTY: {{ item.quantity }}
+                  </v-col>
+                  <v-col style="padding: 6px" cols="6">
+                    ${{ item.pricePerUnit }}
+                  </v-col>
+                </v-row>
               </v-btn>
-            </div>
-          </v-col>
+            </v-col>
 
-          <v-col cols="4" class="spacing" style="padding-bottom: 8px">
-            <v-btn variant="outlined" block>+</v-btn>
-          </v-col>
-        </v-row>
+            <v-col
+              cols="12"
+              md="6"
+              lg="4"
+              class="spacing"
+              style="padding: 5px 10px"
+            >
+              <v-btn variant="outlined" block height="71">+</v-btn>
+            </v-col>
+          </v-row>
+        </div>
       </v-col>
       <v-col
         cols="12"
