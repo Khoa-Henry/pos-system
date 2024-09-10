@@ -8,7 +8,12 @@ import { RouterLink } from "vue-router";
       <v-col cols="12" class="col"><h1>Circle...</h1></v-col>
       <v-col cols="6" md="4" class="col">
         <RouterLink to="/checkout">
-          <v-icon size="x-large" class="icon" icon="mdi-table"></v-icon>
+          <v-icon
+            size="x-large"
+            class="icon"
+            color="primary"
+            icon="mdi-table"
+          ></v-icon>
           <br />Checkout
         </RouterLink>
       </v-col>
@@ -17,6 +22,7 @@ import { RouterLink } from "vue-router";
           <v-icon
             size="x-large"
             class="icon"
+            color="primary"
             icon="mdi-chart-areaspline"
           ></v-icon>
           <br />
@@ -25,19 +31,19 @@ import { RouterLink } from "vue-router";
       </v-col>
       <v-col cols="6" md="4" class="col">
         <RouterLink to="/">
-          <v-icon class="icon" icon="mdi-folder"></v-icon>
+          <v-icon class="icon" color="primary" icon="mdi-folder"></v-icon>
           <br />PlaceHolder
         </RouterLink>
       </v-col>
       <v-col cols="6" md="4" class="col">
         <RouterLink to="/">
-          <v-icon class="icon" icon="mdi-folder"></v-icon>
+          <v-icon class="icon" color="primary" icon="mdi-folder"></v-icon>
           <br />PlaceHolder
         </RouterLink>
       </v-col>
       <v-col cols="6" md="4" class="col">
         <RouterLink to="/">
-          <v-icon class="icon" icon="mdi-folder"></v-icon>
+          <v-icon class="icon" color="primary" icon="mdi-folder"></v-icon>
           <br />PlaceHolder
         </RouterLink>
       </v-col>
@@ -63,7 +69,13 @@ import { RouterLink } from "vue-router";
 }
 a {
   text-decoration: none;
+  /* theme overrides */
+  color: var(--primary);
 }
+/* override nav link */
+/* a:hover {
+  color: #000;
+} */
 .title {
   padding-bottom: 45px;
 }

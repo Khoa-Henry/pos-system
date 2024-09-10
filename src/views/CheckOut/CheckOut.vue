@@ -12,7 +12,8 @@ const allItems = store.value.flatMap((category) => category.items);
     <v-row no-gutters class="containerRow">
       <v-col>
         <RouterLink to="/">
-          <v-icon icon="mdi-chevron-left" class="icon"> </v-icon>
+          <v-icon icon="mdi-chevron-left" color="primary" class="icon">
+          </v-icon>
         </RouterLink>
       </v-col>
     </v-row>
@@ -76,7 +77,7 @@ const allItems = store.value.flatMap((category) => category.items);
                 class="pa-2"
               >
                 <v-btn variant="outlined" block class="text-none" height="auto">
-                  <v-container fluid>
+                  <v-container fluid class="px-0">
                     <v-row no-gutters>
                       <v-col cols="12">
                         {{ item.itemName }}
@@ -117,7 +118,7 @@ const allItems = store.value.flatMap((category) => category.items);
                 ><v-divider class="border-opacity-100"></v-divider
               ></v-col>
               <v-col cols="12">
-                <v-btn block color="#551a8b">Continue to payment</v-btn></v-col
+                <v-btn block color="primary">Continue to payment</v-btn></v-col
               >
             </v-row>
           </v-container>
