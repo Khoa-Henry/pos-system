@@ -3,13 +3,13 @@ import App from "./App.vue";
 import router from "./router";
 
 // Vuetify
-import "vuetify/styles";
-import { createVuetify, useTheme } from "vuetify";
+import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import "vuetify/styles";
 
-import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
 import "@mdi/font/css/materialdesignicons.css";
+import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
 import "vuetify/styles";
 
 //Store
@@ -19,7 +19,7 @@ import { createPinia } from "pinia";
 // https://vuetifyjs.com/en/api/use-display/
 
 const myCustomLightTheme = {
-  dark: false,
+  dark: true,
   colors: {
     background: "#FFFFFF",
     surface: "#FFFFFF",

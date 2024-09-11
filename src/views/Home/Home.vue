@@ -20,18 +20,32 @@ import { RouterLink } from "vue-router";
           <br />Checkout
         </RouterLink>
       </v-col>
-      <v-col cols="6" md="4" class="col"
-        ><RouterLink to="history">
+
+      <v-col cols="6" md="4" class="col">
+        <RouterLink to="/">
           <v-icon
-            size="x-large"
             class="icon"
             color="primary"
             icon="mdi-chart-areaspline"
           ></v-icon>
+          <br />Reports
+        </RouterLink>
+      </v-col>
+
+      <v-col cols="6" md="4" class="col">
+        <RouterLink to="history">
+          <v-icon
+            size="x-large"
+            class="icon"
+            color="primary"
+            icon="mdi-history"
+          >
+          </v-icon>
           <br />
-          History</RouterLink
-        >
+          History
+        </RouterLink>
       </v-col>
+
       <v-col cols="6" md="4" class="col">
         <RouterLink to="/">
           <v-icon class="icon" color="primary" icon="mdi-folder"></v-icon>
@@ -40,14 +54,8 @@ import { RouterLink } from "vue-router";
       </v-col>
       <v-col cols="6" md="4" class="col">
         <RouterLink to="/">
-          <v-icon class="icon" color="primary" icon="mdi-folder"></v-icon>
-          <br />PlaceHolder
-        </RouterLink>
-      </v-col>
-      <v-col cols="6" md="4" class="col">
-        <RouterLink to="/">
-          <v-icon class="icon" color="primary" icon="mdi-folder"></v-icon>
-          <br />PlaceHolder
+          <v-icon class="icon" color="primary" icon="mdi-cogs"></v-icon>
+          <br />Setting
         </RouterLink>
       </v-col>
     </v-row>
