@@ -1,5 +1,8 @@
 <script setup>
 import { RouterLink } from "vue-router";
+// import { useInventoryListStore } from "../../store/inventoryList";
+
+// useInventoryListStore();
 </script>
 
 <template>

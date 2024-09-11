@@ -2,11 +2,14 @@
 import { RouterLink } from "vue-router";
 import { useInventoryListStore } from "../../store/inventoryList";
 import { ref, computed } from "vue";
-// import { useSelectedItemsStore } from "@/store/selectedItems";
+import { useSelectedItemsStore } from "@/store/selectedItems";
 
 const currentCategory = ref("All");
 
-const store = useInventoryListStore();
+const inventoryStore = useInventoryListStore();
+const selectedItemsStore = useSelectedItemsStore();
+
+const items = [{ title: "Delete" }, { title: "Edit" }];
 
 const onCategorySelection = (categoryName) => {
   currentCategory.value = categoryName;
@@ -14,9 +17,9 @@ const onCategorySelection = (categoryName) => {
 
 const displayItems = computed(() => {
   if (currentCategory.value === "All") {
-    return store.value.flatMap((category) => category.items);
+    return inventoryStore.value.flatMap((category) => category.items);
   } else {
-    const selectedCategory = store.value.find(
+    const selectedCategory = inventoryStore.value.find(
       (category) => category.categoryName === currentCategory.value
     );
     return selectedCategory ? selectedCategory.items : [];
@@ -54,10 +57,34 @@ const displayItems = computed(() => {
                   :color="currentCategory === 'All' ? 'primary' : ''"
                   @click="onCategorySelection('All')"
                 >
-                  See all
+                  <div>See all</div>
+                  <div style="width: fit-content">
+                    <v-menu>
+                      <template v-slot:activator="{ props }">
+                        <v-btn
+                          icon="mdi-dots-vertical"
+                          variant="text"
+                          height="30"
+                          v-bind="props"
+                        ></v-btn>
+                      </template>
+
+                      <v-list>
+                        <v-list-item v-for="(item, i) in items" :key="i">
+                          <v-list-item-title>{{
+                            item.title
+                          }}</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
+                  </div>
                 </v-btn>
               </v-col>
-              <v-col cols="12" v-for="category in store.value" class="pb-4">
+              <v-col
+                cols="12"
+                v-for="category in inventoryStore.value"
+                class="pb-4"
+              >
                 <v-btn
                   :variant="
                     currentCategory === category.categoryName
@@ -72,6 +99,22 @@ const displayItems = computed(() => {
                   @click="onCategorySelection(category.categoryName)"
                 >
                   {{ category.categoryName }}
+                  <v-menu>
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        icon="mdi-dots-vertical"
+                        variant="text"
+                        height="30"
+                        v-bind="props"
+                      ></v-btn>
+                    </template>
+
+                    <v-list>
+                      <v-list-item v-for="(item, i) in items" :key="i">
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
                 </v-btn>
               </v-col>
               <v-col class="pb-4">
@@ -111,8 +154,34 @@ const displayItems = computed(() => {
                 v-for="item in displayItems"
                 class="pa-2"
               >
-                <v-btn variant="outlined" block class="text-none" height="auto">
-                  <v-container fluid class="px-0">
+                <v-btn
+                  variant="outlined"
+                  block
+                  class="text-none"
+                  height="auto"
+                  @click="selectedItemsStore.addSelectItem(item)"
+                >
+                  <v-container class="px-0 pt-0" style="max-width: 352px">
+                    <div style="text-align: right">
+                      <v-menu>
+                        <template v-slot:activator="{ props }">
+                          <v-btn
+                            icon="mdi-dots-vertical"
+                            variant="text"
+                            v-bind="props"
+                            height="30"
+                          ></v-btn>
+                        </template>
+
+                        <v-list>
+                          <v-list-item v-for="(item, i) in items" :key="i">
+                            <v-list-item-title>{{
+                              item.title
+                            }}</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </div>
                     <v-row no-gutters>
                       <v-col cols="12">
                         {{ item.itemName }}
@@ -120,15 +189,19 @@ const displayItems = computed(() => {
                       <v-col cols="12">
                         <v-divider class="border-opacity-100"></v-divider>
                       </v-col>
-                      <v-col cols="6"> QTY: {{ item.quantity }} </v-col>
-                      <v-col cols="6"> ${{ item.pricePerUnit }} </v-col>
+                      <v-col cols="6" style="text-align: left">
+                        QTY: {{ item.quantity }}
+                      </v-col>
+                      <v-col cols="6" style="text-align: right">
+                        ${{ item.pricePerUnit }}
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-btn>
               </v-col>
 
               <v-col cols="12" md="6" lg="4" class="pa-2">
-                <v-btn variant="outlined" block height="67">+</v-btn>
+                <v-btn variant="outlined" block height="81">+</v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -142,19 +215,47 @@ const displayItems = computed(() => {
         style="padding: 6px 6px 0px 6px"
       >
         <div class="outlineContainer">
-          <v-container style="height: 82.9%">
-            <v-row><v-col>name----- price</v-col></v-row>
+          <v-container style="height: 82.9%; overflow: auto">
+            <v-row v-for="item in selectedItemsStore.items">
+              <v-col cols="12">
+                <v-container fluid class="pa-0">
+                  <v-row no-gutters>
+                    <v-col cols="auto">{{ item.value.itemName }} </v-col>
+                    <v-col cols="true" align-self="center" class="px-1">
+                      <v-divider class="border-opacity-100"></v-divider>
+                    </v-col>
+                    <v-col cols="auto">
+                      {{ item.value.pricePerUnit }} ({{ item.count }})
+                    </v-col>
+                    <v-col cols="auto" align-self="center">
+                      <v-btn
+                        icon="mdi-delete"
+                        variant="text"
+                        height="24"
+                      ></v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-col>
+            </v-row>
           </v-container>
 
           <v-container>
             <v-row>
-              <v-col cols="12">Total: 0.00</v-col>
               <v-col cols="12"
-                ><v-divider class="border-opacity-100"></v-divider
-              ></v-col>
-              <v-col cols="12">
-                <v-btn block color="primary">Continue to payment</v-btn></v-col
+                >Total: ${{ selectedItemsStore.totalPrice.toFixed(2) }}</v-col
               >
+              <v-col cols="12">
+                <v-divider class="border-opacity-100"></v-divider>
+              </v-col>
+              <v-col cols="12">
+                <v-btn
+                  block
+                  color="primary"
+                  @click="selectedItemsStore.clearSelectedItems()"
+                  >Continue to payment</v-btn
+                >
+              </v-col>
             </v-row>
           </v-container>
         </div>
