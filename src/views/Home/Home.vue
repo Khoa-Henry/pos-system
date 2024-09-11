@@ -8,7 +8,7 @@ import { RouterLink } from "vue-router";
 <template>
   <v-container class="container">
     <v-row align-content="center" class="containerRow">
-      <v-col cols="12" class="col"><h1>Circle...</h1></v-col>
+      <v-col cols="12" class="col"><h1>Welcome to Circle</h1></v-col>
       <v-col cols="6" md="4" class="col">
         <RouterLink to="/checkout">
           <v-icon

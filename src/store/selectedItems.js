@@ -34,7 +34,7 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
     deleteSelectedItem(item) {},
     clearSelectedItems() {
       this.items = [];
-      this.totalPrice = [];
+      this.totalPrice = 0;
     },
   },
 });
