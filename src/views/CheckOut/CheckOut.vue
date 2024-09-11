@@ -1,10 +1,27 @@
 <script setup>
 import { RouterLink } from "vue-router";
 import { useInventoryListStore } from "../../store/inventoryList";
+import { ref, computed } from "vue";
 // import { useSelectedItemsStore } from "@/store/selectedItems";
 
+const currentCategory = ref("All");
+
 const store = useInventoryListStore();
-const allItems = store.value.flatMap((category) => category.items);
+
+const onCategorySelection = (categoryName) => {
+  currentCategory.value = categoryName;
+};
+
+const displayItems = computed(() => {
+  if (currentCategory.value === "All") {
+    return store.value.flatMap((category) => category.items);
+  } else {
+    const selectedCategory = store.value.find(
+      (category) => category.categoryName === currentCategory.value
+    );
+    return selectedCategory ? selectedCategory.items : [];
+  }
+});
 </script>
 
 <template>
@@ -30,12 +47,30 @@ const allItems = store.value.flatMap((category) => category.items);
           <v-container fluid>
             <v-row no-gutters>
               <v-col cols="12" class="pb-4">
-                <v-btn variant="outlined" block class="text-none">
+                <v-btn
+                  :variant="currentCategory === 'All' ? 'elevated' : 'outlined'"
+                  block
+                  class="text-none"
+                  :color="currentCategory === 'All' ? 'primary' : ''"
+                  @click="onCategorySelection('All')"
+                >
                   See all
                 </v-btn>
               </v-col>
               <v-col cols="12" v-for="category in store.value" class="pb-4">
-                <v-btn variant="outlined" block class="text-none">
+                <v-btn
+                  :variant="
+                    currentCategory === category.categoryName
+                      ? 'elevated'
+                      : 'outlined'
+                  "
+                  :color="
+                    currentCategory === category.categoryName ? 'primary' : ''
+                  "
+                  block
+                  class="text-none"
+                  @click="onCategorySelection(category.categoryName)"
+                >
                   {{ category.categoryName }}
                 </v-btn>
               </v-col>
@@ -73,7 +108,7 @@ const allItems = store.value.flatMap((category) => category.items);
                 cols="12"
                 md="6"
                 lg="4"
-                v-for="item in allItems"
+                v-for="item in displayItems"
                 class="pa-2"
               >
                 <v-btn variant="outlined" block class="text-none" height="auto">
