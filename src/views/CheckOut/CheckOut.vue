@@ -34,10 +34,6 @@ const displayItems = computed(() => {
         <v-btn @click="$router.push('/')" icon variant="text" color="primary">
           <v-icon icon="mdi-chevron-left" class="icon"> </v-icon>
         </v-btn>
-        <!-- <RouterLink to="/">
-          <v-icon icon="mdi-chevron-left" color="primary" class="icon">
-          </v-icon>
-        </RouterLink> -->
       </v-col>
     </v-row>
 
@@ -50,7 +46,7 @@ const displayItems = computed(() => {
         style="padding: 6px 6px 0px 6px"
       >
         <div class="outlineContainer">
-          <v-container fluid>
+          <v-container fluid class="pb-0">
             <v-row no-gutters>
               <v-col cols="12" class="pb-4">
                 <v-btn
@@ -61,26 +57,6 @@ const displayItems = computed(() => {
                   @click="onCategorySelection('All')"
                 >
                   <div>See all</div>
-                  <div style="width: fit-content">
-                    <v-menu>
-                      <template v-slot:activator="{ props }">
-                        <v-btn
-                          icon="mdi-dots-vertical"
-                          variant="text"
-                          height="30"
-                          v-bind="props"
-                        ></v-btn>
-                      </template>
-
-                      <v-list>
-                        <v-list-item v-for="(item, i) in items" :key="i">
-                          <v-list-item-title>{{
-                            item.title
-                          }}</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
-                  </div>
                 </v-btn>
               </v-col>
               <v-col
@@ -102,26 +78,7 @@ const displayItems = computed(() => {
                   @click="onCategorySelection(category.categoryName)"
                 >
                   {{ category.categoryName }}
-                  <v-menu>
-                    <template v-slot:activator="{ props }">
-                      <v-btn
-                        icon="mdi-dots-vertical"
-                        variant="text"
-                        height="30"
-                        v-bind="props"
-                      ></v-btn>
-                    </template>
-
-                    <v-list>
-                      <v-list-item v-for="(item, i) in items" :key="i">
-                        <v-list-item-title>{{ item.title }}</v-list-item-title>
-                      </v-list-item>
-                    </v-list>
-                  </v-menu>
                 </v-btn>
-              </v-col>
-              <v-col class="pb-4">
-                <v-btn variant="outlined" block>+</v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -150,6 +107,12 @@ const displayItems = computed(() => {
                 </v-text-field>
               </v-col>
 
+              <v-col cols="12" md="6" lg="4" class="pa-2">
+                <v-btn variant="outlined" block height="67" class="text-none">
+                  Custom Item
+                </v-btn>
+              </v-col>
+
               <v-col
                 cols="12"
                 md="6"
@@ -162,29 +125,10 @@ const displayItems = computed(() => {
                   block
                   class="text-none"
                   height="auto"
+                  :disabled="item.quantity <= 0"
                   @click="selectedItemsStore.addSelectItem(item)"
                 >
-                  <v-container class="px-0 pt-0" style="max-width: 352px">
-                    <div style="text-align: right">
-                      <v-menu>
-                        <template v-slot:activator="{ props }">
-                          <v-btn
-                            icon="mdi-dots-vertical"
-                            variant="text"
-                            v-bind="props"
-                            height="30"
-                          ></v-btn>
-                        </template>
-
-                        <v-list>
-                          <v-list-item v-for="(item, i) in items" :key="i">
-                            <v-list-item-title>{{
-                              item.title
-                            }}</v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </div>
+                  <v-container class="px-0" style="max-width: 352px">
                     <v-row no-gutters>
                       <v-col cols="12">
                         {{ item.itemName }}
@@ -201,10 +145,6 @@ const displayItems = computed(() => {
                     </v-row>
                   </v-container>
                 </v-btn>
-              </v-col>
-
-              <v-col cols="12" md="6" lg="4" class="pa-2">
-                <v-btn variant="outlined" block height="81">+</v-btn>
               </v-col>
             </v-row>
           </v-container>

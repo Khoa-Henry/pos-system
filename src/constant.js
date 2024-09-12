@@ -6,7 +6,7 @@ export const inventoryList = [
       {
         itemId: "101",
         itemName: "Laptop",
-        quantity: 15,
+        quantity: 0,
         pricePerUnit: 899.99,
         supplier: "TechSupply Co.",
         lastRestockDate: "2024-08-25",
