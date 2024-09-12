@@ -1,93 +1,143 @@
-<script setup>
-import { RouterLink } from "vue-router";
-// import { useInventoryListStore } from "../../store/inventoryList";
-
-// useInventoryListStore();
-</script>
-
 <template>
-  <v-container class="container">
-    <v-row align-content="center" class="containerRow">
-      <v-col cols="12" class="col"><h1>Welcome to Circle</h1></v-col>
-      <v-col cols="6" md="4" class="col">
-        <RouterLink to="/checkout">
-          <v-icon
-            size="x-large"
-            class="icon"
-            color="primary"
-            icon="mdi-table"
-          ></v-icon>
-          <br />Checkout
+  <div
+    style="
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    "
+  >
+    <div class="center-text">Circle</div>
+    <ul class="nav-list">
+      <li class="nav-item" style="transform: rotate(0deg) translate(120px)">
+        <RouterLink to="/checkout" class="nav-link">
+          <span style="transform: rotate(-0deg)">
+            <v-icon
+              style="font-size: 60px"
+              color="primary"
+              icon="mdi-table"
+            ></v-icon>
+            <br />
+            Checkout
+          </span>
         </RouterLink>
-      </v-col>
-
-      <v-col cols="6" md="4" class="col">
-        <RouterLink to="/">
-          <v-icon
-            class="icon"
-            color="primary"
-            icon="mdi-chart-areaspline"
-          ></v-icon>
-          <br />Reports
+      </li>
+      <li class="nav-item" style="transform: rotate(60deg) translate(120px)">
+        <RouterLink to="/" class="nav-link">
+          <span style="transform: rotate(-60deg)">
+            <v-icon
+              style="font-size: 60px"
+              color="primary"
+              icon="mdi-chart-areaspline"
+            ></v-icon>
+            <br />
+            Reports
+          </span>
         </RouterLink>
-      </v-col>
-
-      <v-col cols="6" md="4" class="col">
-        <RouterLink to="history">
-          <v-icon
-            size="x-large"
-            class="icon"
-            color="primary"
-            icon="mdi-history"
-          >
-          </v-icon>
-          <br />
-          History
+      </li>
+      <li class="nav-item" style="transform: rotate(120deg) translate(120px)">
+        <RouterLink to="/history" class="nav-link">
+          <span style="transform: rotate(-120deg)"
+            ><v-icon style="font-size: 60px" color="primary" icon="mdi-history">
+            </v-icon>
+            <br />
+            History
+          </span>
         </RouterLink>
-      </v-col>
-
-      <v-col cols="6" md="4" class="col">
-        <RouterLink to="/">
-          <v-icon class="icon" color="primary" icon="mdi-folder"></v-icon>
-          <br />PlaceHolder
+      </li>
+      <li class="nav-item" style="transform: rotate(180deg) translate(120px)">
+        <RouterLink to="/" class="nav-link">
+          <span style="transform: rotate(-180deg)">
+            <v-icon
+              style="font-size: 60px"
+              color="primary"
+              icon="mdi-folder"
+            ></v-icon>
+            <br />
+            Placeholder
+          </span>
         </RouterLink>
-      </v-col>
-      <v-col cols="6" md="4" class="col">
-        <RouterLink to="/">
-          <v-icon class="icon" color="primary" icon="mdi-cogs"></v-icon>
-          <br />Setting
+      </li>
+      <li class="nav-item" style="transform: rotate(240deg) translate(120px)">
+        <RouterLink to="/" class="nav-link">
+          <span style="transform: rotate(-240deg)">
+            <v-icon
+              style="font-size: 60px"
+              color="primary"
+              icon="mdi-cogs"
+            ></v-icon>
+            <br />
+            Setting
+          </span>
         </RouterLink>
-      </v-col>
-    </v-row>
-  </v-container>
+      </li>
+      <li class="nav-item" style="transform: rotate(300deg) translate(120px)">
+        <RouterLink to="/" class="nav-link">
+          <span style="transform: rotate(-300deg)">
+            <v-icon
+              style="font-size: 60px"
+              color="primary"
+              icon="mdi-logout"
+            ></v-icon>
+            <br />
+            Logout
+          </span>
+        </RouterLink>
+      </li>
+    </ul>
+  </div>
 </template>
 
+<script>
+import { RouterLink } from "vue-router";
+</script>
+
 <style scoped>
-.container {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.containerRow {
-  height: 90vh;
-  margin: 0;
-  overflow: hidden;
-}
-.col {
-  text-align: center;
-}
-.icon {
-  font-size: 4rem;
-}
 a {
   text-decoration: none;
-  /* theme overrides */
-  color: var(--primary);
+  color: white;
 }
-/* override nav link */
-/* a:hover {
-  color: #000;
-} */
-.title {
-  padding-bottom: 45px;
+
+a:hover {
+  /* color: pink; */
+}
+
+.center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-item {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
 }
 </style>
