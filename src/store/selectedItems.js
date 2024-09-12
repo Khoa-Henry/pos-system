@@ -19,10 +19,27 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
         this.items.push({ value: item, count: 1 });
       }
 
-      // Update the total price
-      this.totalPrice += item.pricePerUnit;
+      this.totalPrice =
+        this.totalPrice + Math.round(item.pricePerUnit * 100) / 100;
     },
-    deleteSelectedItem(item) {},
+    deleteSelectedItem(item) {
+      const index = this.items.findIndex(
+        (existing) =>
+          existing.value.itemId === item.value.itemId &&
+          existing.value.itemName === item.value.itemName
+      );
+
+      if (index !== -1) {
+        item.count--;
+
+        if (item.count === 0) {
+          this.items.splice(index, 1);
+        }
+      }
+
+      this.totalPrice =
+        this.totalPrice - Math.round(item.value.pricePerUnit * 100) / 100;
+    },
     clearSelectedItems() {
       this.items = [];
       this.totalPrice = 0;

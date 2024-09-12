@@ -48,6 +48,7 @@ const selectedItemsStore = useSelectedItemsStore();
                     variant="text"
                     height="24"
                     style="margin-right: -24px"
+                    @click="selectedItemsStore.deleteSelectedItem(item)"
                   ></v-btn>
                 </v-col>
               </v-row>
