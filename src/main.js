@@ -19,7 +19,7 @@ import { createPinia } from "pinia";
 // https://vuetifyjs.com/en/api/use-display/
 
 const myCustomLightTheme = {
-  dark: true,
+  dark: false,
   colors: {
     background: "#FFFFFF",
     surface: "#FFFFFF",
@@ -58,10 +58,10 @@ const myCustomLightTheme = {
 
 const vuetify = createVuetify({
   theme: {
-    defaultTheme: "myCustomLightTheme",
-    themes: {
-      myCustomLightTheme,
-    },
+    defaultTheme: "dark",
+    // themes: {
+    //   myCustomLightTheme,
+    // },
   },
   icons: {
     defaultSet: "mdi",

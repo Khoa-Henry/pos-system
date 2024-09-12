@@ -31,10 +31,13 @@ const displayItems = computed(() => {
   <v-container class="container" fluid>
     <v-row no-gutters class="containerRow">
       <v-col>
-        <RouterLink to="/">
+        <v-btn @click="$router.push('/')" icon variant="text" color="primary">
+          <v-icon icon="mdi-chevron-left" class="icon"> </v-icon>
+        </v-btn>
+        <!-- <RouterLink to="/">
           <v-icon icon="mdi-chevron-left" color="primary" class="icon">
           </v-icon>
-        </RouterLink>
+        </RouterLink> -->
       </v-col>
     </v-row>
 

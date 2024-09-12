@@ -1,3 +1,26 @@
+<script setup>
+import { useDisplay, useTheme } from "vuetify";
+
+import { computed } from "vue";
+
+const { width } = useDisplay();
+const translateValue = computed(() => (width.value < 700 ? "120px" : "220px"));
+const isMobile = computed(() => {
+  return width.value < 700;
+});
+// const { themes } = useTheme();
+// console.log(themes);
+
+const items = [
+  { text: "Setting", href: "/", icon: "mdi-cogs" },
+  { text: "Logout", href: "/", icon: "mdi-logout" },
+  { text: "Placeholder", href: "/", icon: "mdi-folder" },
+  { text: "History", href: "/history", icon: "mdi-history" },
+  { text: "Checkout", href: "/checkout", icon: "mdi-table" },
+  { text: "Reports", href: "/", icon: "mdi-chart-areaspline" },
+];
+</script>
+
 <template>
   <div
     style="
@@ -8,99 +31,54 @@
       height: 100%;
     "
   >
-    <div class="center-text">Circle</div>
+    <div class="center-text" :style="{ fontSize: isMobile ? '45px' : '60px' }">
+      Circle
+    </div>
     <ul class="nav-list">
-      <li class="nav-item" style="transform: rotate(0deg) translate(120px)">
-        <RouterLink to="/checkout" class="nav-link">
-          <span style="transform: rotate(-0deg)">
-            <v-icon
-              style="font-size: 60px"
-              color="primary"
-              icon="mdi-table"
-            ></v-icon>
-            <br />
-            Checkout
-          </span>
-        </RouterLink>
-      </li>
-      <li class="nav-item" style="transform: rotate(60deg) translate(120px)">
-        <RouterLink to="/" class="nav-link">
-          <span style="transform: rotate(-60deg)">
-            <v-icon
-              style="font-size: 60px"
-              color="primary"
-              icon="mdi-chart-areaspline"
-            ></v-icon>
-            <br />
-            Reports
-          </span>
-        </RouterLink>
-      </li>
-      <li class="nav-item" style="transform: rotate(120deg) translate(120px)">
-        <RouterLink to="/history" class="nav-link">
-          <span style="transform: rotate(-120deg)"
-            ><v-icon style="font-size: 60px" color="primary" icon="mdi-history">
-            </v-icon>
-            <br />
-            History
-          </span>
-        </RouterLink>
-      </li>
-      <li class="nav-item" style="transform: rotate(180deg) translate(120px)">
-        <RouterLink to="/" class="nav-link">
-          <span style="transform: rotate(-180deg)">
-            <v-icon
-              style="font-size: 60px"
-              color="primary"
-              icon="mdi-folder"
-            ></v-icon>
-            <br />
-            Placeholder
-          </span>
-        </RouterLink>
-      </li>
-      <li class="nav-item" style="transform: rotate(240deg) translate(120px)">
-        <RouterLink to="/" class="nav-link">
-          <span style="transform: rotate(-240deg)">
-            <v-icon
-              style="font-size: 60px"
-              color="primary"
-              icon="mdi-cogs"
-            ></v-icon>
-            <br />
-            Setting
-          </span>
-        </RouterLink>
-      </li>
-      <li class="nav-item" style="transform: rotate(300deg) translate(120px)">
-        <RouterLink to="/" class="nav-link">
-          <span style="transform: rotate(-300deg)">
-            <v-icon
-              style="font-size: 60px"
-              color="primary"
-              icon="mdi-logout"
-            ></v-icon>
-            <br />
-            Logout
-          </span>
-        </RouterLink>
+      <li
+        v-for="(item, index) in items"
+        :key="index"
+        class="nav-item"
+        :style="{
+          transform: `rotate(${
+            (360 / items.length) * index
+          }deg) translate(${translateValue})`,
+        }"
+      >
+        <v-btn
+          icon
+          stacked
+          variant="text"
+          color="primary"
+          class="nav-link"
+          size="large"
+          @click="$router.push(item.href)"
+          :style="{
+            transform: `rotate(-${(360 / items.length) * index}deg)`,
+          }"
+        >
+          <v-icon
+            :icon="item.icon"
+            :style="{ fontSize: isMobile ? '45px' : '60px' }"
+            color="primary"
+          ></v-icon>
+          <p :style="{ fontSize: isMobile ? '10px' : '16px' }">
+            {{ item.text }}
+          </p>
+        </v-btn>
       </li>
     </ul>
   </div>
 </template>
 
-<script>
-import { RouterLink } from "vue-router";
-</script>
-
 <style scoped>
 a {
   text-decoration: none;
-  color: white;
+  color: #1867c0;
 }
 
 a:hover {
-  /* color: pink; */
+  color: #1f5592;
 }
 
 .center-text {
