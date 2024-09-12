@@ -14,7 +14,7 @@ const isMobile = computed(() => {
 const items = [
   { text: "Setting", href: "/", icon: "mdi-cogs" },
   { text: "Logout", href: "/", icon: "mdi-logout" },
-  { text: "Placeholder", href: "/", icon: "mdi-folder" },
+  { text: "Inventory", href: "/", icon: "mdi-pencil" },
   { text: "History", href: "/history", icon: "mdi-history" },
   { text: "Checkout", href: "/checkout", icon: "mdi-table" },
   { text: "Reports", href: "/", icon: "mdi-chart-areaspline" },
