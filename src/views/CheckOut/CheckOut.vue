@@ -1,5 +1,4 @@
 <script setup>
-import { RouterLink } from "vue-router";
 import { useInventoryListStore } from "../../store/inventoryList";
 import { ref, computed } from "vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
@@ -8,8 +7,6 @@ const currentCategory = ref("All");
 
 const inventoryStore = useInventoryListStore();
 const selectedItemsStore = useSelectedItemsStore();
-
-const items = [{ title: "Delete" }, { title: "Edit" }];
 
 const onCategorySelection = (categoryName) => {
   currentCategory.value = categoryName;
