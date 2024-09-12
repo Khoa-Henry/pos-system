@@ -89,7 +89,7 @@ const displayItems = computed(() => {
         style="padding: 6px 6px 0px 6px"
       >
         <div class="outlineContainer">
-          <v-container fluid class="px-2 pb-2">
+          <v-container fluid class="px-2 pb-2" style="height: 100%">
             <v-row no-gutters>
               <v-col cols="12" class="px-2 pb-2">
                 <v-text-field
@@ -155,7 +155,7 @@ const displayItems = computed(() => {
         style="padding: 6px 6px 0px 6px"
       >
         <div class="outlineContainer">
-          <v-container style="height: 82.9%; overflow: auto">
+          <v-container fluid class="pb-0" style="height: 82.9%; overflow: auto">
             <v-row v-for="item in selectedItemsStore.items">
               <v-col cols="12">
                 <v-container fluid class="pa-0">
@@ -180,15 +180,15 @@ const displayItems = computed(() => {
             </v-row>
           </v-container>
 
-          <v-container>
+          <v-container fluid>
             <v-row>
-              <v-col cols="12"
+              <v-col cols="12 py-2"
                 >Total: ${{ selectedItemsStore.totalPrice.toFixed(2) }}</v-col
               >
-              <v-col cols="12">
+              <v-col cols="12 py-2">
                 <v-divider class="border-opacity-100"></v-divider>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="12 py-2">
                 <v-btn
                   block
                   color="primary"
