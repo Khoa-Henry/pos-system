@@ -2,6 +2,13 @@
 import { useInventoryListStore } from "../../store/inventoryList";
 import { ref, computed } from "vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
+import MobileCheckoutSection from "./component/MobileCheckoutSection.vue";
+import { useDisplay } from "vuetify";
+
+const { width } = useDisplay();
+const changePageLayout = computed(() => {
+  return width.value < 960;
+});
 
 const currentCategory = ref("All");
 
@@ -28,9 +35,17 @@ const displayItems = computed(() => {
   <v-container class="container" fluid>
     <v-row no-gutters class="containerRow">
       <v-col>
-        <v-btn @click="$router.push('/')" icon variant="text" color="primary">
+        <v-btn
+          @click="$router.push('/')"
+          variant="text"
+          color="primary"
+          class="pa-0"
+        >
           <v-icon icon="mdi-chevron-left" class="icon"> </v-icon>
         </v-btn>
+      </v-col>
+      <v-col cols="auto" class="pt-1" v-if="changePageLayout">
+        <MobileCheckoutSection />
       </v-col>
     </v-row>
 
@@ -148,6 +163,7 @@ const displayItems = computed(() => {
         </div>
       </v-col>
       <v-col
+        v-if="!changePageLayout"
         cols="12"
         md="4"
         lg="4"
@@ -172,6 +188,7 @@ const displayItems = computed(() => {
                         icon="mdi-delete"
                         variant="text"
                         height="24"
+                        style="margin-right: -24px"
                       ></v-btn>
                     </v-col>
                   </v-row>
@@ -210,17 +227,16 @@ const displayItems = computed(() => {
 }
 .containerRow {
   margin: 0;
-  height: 5.4%;
+  height: 6%;
 }
 
 .fullHeight {
-  height: 94.6%;
+  height: 94%;
   margin: 0;
   /* overflow: auto; */
 }
 .icon {
   font-size: 3rem;
-  width: 20px;
 }
 
 .categoryCol {
