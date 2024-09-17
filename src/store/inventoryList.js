@@ -6,9 +6,14 @@ export const useInventoryListStore = defineStore("inventoryList", {
     return { value: inventoryList };
   },
 
-  //   actions: {
-  //     increment() {
-  //       this.count++;
-  //     },
-  //   },
+  actions: {
+    editItem(item) {
+      this.count++;
+    },
+    deleteItem(item) {},
+    addItem(item) {},
+    addCategory(category) {},
+    editCategory(category) {},
+    deleteCategory(category) {},
+  },
 });

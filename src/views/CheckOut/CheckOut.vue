@@ -4,6 +4,7 @@ import { ref, computed } from "vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 import MobileCheckoutSection from "./component/MobileCheckoutSection.vue";
 import { useDisplay } from "vuetify";
+import PaymentSelection from "./component/PaymentSelection.vue";
 
 const { width } = useDisplay();
 const changePageLayout = computed(() => {
@@ -11,12 +12,21 @@ const changePageLayout = computed(() => {
 });
 
 const currentCategory = ref("All");
+const paymentDialog = ref(false);
 
 const inventoryStore = useInventoryListStore();
 const selectedItemsStore = useSelectedItemsStore();
 
 const onCategorySelection = (categoryName) => {
   currentCategory.value = categoryName;
+};
+
+const onPayment = () => {
+  paymentDialog.value = true;
+  selectedItemsStore.clearSelectedItems();
+};
+const onClosePayment = () => {
+  paymentDialog.value = false;
 };
 
 const displayItems = computed(() => {
@@ -32,6 +42,7 @@ const displayItems = computed(() => {
 </script>
 
 <template>
+  <PaymentSelection :dialog.sync="paymentDialog" />
   <v-container class="container" fluid>
     <v-row no-gutters class="containerRow">
       <v-col>
@@ -207,10 +218,7 @@ const displayItems = computed(() => {
                 <v-divider class="border-opacity-100"></v-divider>
               </v-col>
               <v-col cols="12 py-2">
-                <v-btn
-                  block
-                  color="primary"
-                  @click="selectedItemsStore.clearSelectedItems()"
+                <v-btn block color="primary" @click="onPayment()"
                   >Continue to payment</v-btn
                 >
               </v-col>

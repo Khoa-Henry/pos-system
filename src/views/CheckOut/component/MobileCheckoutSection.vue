@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 
 const dialog = ref(false);
