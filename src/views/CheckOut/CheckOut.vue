@@ -45,16 +45,12 @@ const displayItems = computed(() => {
   <PaymentSelection :dialog.sync="paymentDialog" />
   <v-container class="container" fluid>
     <v-row no-gutters class="containerRow">
-      <v-col>
-        <v-btn
-          @click="$router.push('/')"
-          variant="text"
-          color="primary"
-          class="pa-0"
-        >
-          <v-icon icon="mdi-chevron-left" class="icon"> </v-icon>
+      <v-col class="pt-1" cols="auto">
+        <v-btn @click="$router.push('/')" color="primary" variant="text" icon>
+          <v-icon icon="mdi-chevron-left" class="icon"></v-icon>
         </v-btn>
       </v-col>
+      <v-spacer></v-spacer>
       <v-col cols="auto" class="pt-1" v-if="changePageLayout">
         <MobileCheckoutSection />
       </v-col>
