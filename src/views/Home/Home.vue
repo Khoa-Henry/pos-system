@@ -72,15 +72,6 @@ const items = [
 </template>
 
 <style scoped>
-a {
-  text-decoration: none;
-  color: #1867c0;
-}
-
-a:hover {
-  color: #1f5592;
-}
-
 .center-text {
   position: absolute;
   top: 50%;

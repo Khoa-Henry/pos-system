@@ -65,7 +65,7 @@ const displayItems = computed(() => {
         cols="5"
         md="3"
         lg="2"
-        class="categoryCol"
+        class="sectionCol"
         style="padding: 6px 6px 0px 6px"
       >
         <div class="outlineContainer">
@@ -111,7 +111,7 @@ const displayItems = computed(() => {
         cols="7"
         md="5"
         lg="6"
-        class="itemCol"
+        class="sectionCol"
         style="padding: 6px 6px 0px 6px"
       >
         <div class="outlineContainer">
@@ -178,7 +178,7 @@ const displayItems = computed(() => {
         cols="12"
         md="4"
         lg="4"
-        class="checkoutCol"
+        class="sectionCol"
         style="padding: 6px 6px 0px 6px"
       >
         <div class="outlineContainer">
@@ -212,15 +212,24 @@ const displayItems = computed(() => {
           <v-container fluid>
             <v-row>
               <v-col cols="12 py-2"
-                >Total: ${{ selectedItemsStore.totalPrice.toFixed(2) }}</v-col
+                >Total:
+                {{
+                  Math.abs(selectedItemsStore.totalPrice).toLocaleString(
+                    "en-US",
+                    {
+                      style: "currency",
+                      currency: "USD",
+                    }
+                  )
+                }}</v-col
               >
               <v-col cols="12 py-2">
                 <v-divider class="border-opacity-100"></v-divider>
               </v-col>
               <v-col cols="12 py-2">
-                <v-btn block color="primary" @click="onPayment()"
-                  >Continue to payment</v-btn
-                >
+                <v-btn block color="primary" @click="onPayment()">
+                  Continue to payment
+                </v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -230,7 +239,9 @@ const displayItems = computed(() => {
   </v-container>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import "../../styles/main.scss";
+
 .container {
   height: 100vh;
 }
@@ -242,27 +253,18 @@ const displayItems = computed(() => {
 .fullHeight {
   height: 94%;
   margin: 0;
-  /* overflow: auto; */
 }
 .icon {
   font-size: 3rem;
 }
 
-.categoryCol {
-  /* when screen is 900 less, set height to 40% */
+.sectionCol {
   height: 100%;
 }
-.itemCol {
-  /* same as categoryCol */
-  height: 100%;
-}
-.checkoutCol {
-  /* set to be 60%? */
-  height: 100%;
-}
+
 .outlineContainer {
   border-radius: 8px;
-  border: 2px solid lightgray;
+  border: 2px solid $primary-color;
   height: 100%;
   overflow: auto;
 }

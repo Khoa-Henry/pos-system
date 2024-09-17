@@ -14,13 +14,7 @@ const selectedItemsStore = useSelectedItemsStore();
     style="height: 100%"
   >
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn
-        append-icon="mdi-cart"
-        variant="elevated"
-        color="primary"
-        v-bind="activatorProps"
-        >Checkout</v-btn
-      >
+      <v-btn icon="mdi-cart" color="primary" v-bind="activatorProps"></v-btn>
     </template>
 
     <v-card style="height: 100%">
@@ -59,9 +53,15 @@ const selectedItemsStore = useSelectedItemsStore();
 
       <v-container fluid>
         <v-row>
-          <v-col cols="12 py-2"
-            >Total: ${{ selectedItemsStore.totalPrice.toFixed(2) }}</v-col
-          >
+          <v-col cols="12 py-2">
+            Total:
+            {{
+              Math.abs(selectedItemsStore.totalPrice).toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })
+            }}
+          </v-col>
           <v-col cols="12 py-2">
             <v-divider class="border-opacity-100"></v-divider>
           </v-col>
