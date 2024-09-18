@@ -1,25 +1,29 @@
 <script setup>
-import { ref } from "vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 
-const dialog = ref(false);
+const props = defineProps(["dialog", "paymentDialog"]);
+const emit = defineEmits(["update:dialog", "update:paymentDialog"]);
 const selectedItemsStore = useSelectedItemsStore();
+const closeDialog = () => {
+  emit("update:dialog", false);
+};
+
+const onPayment = () => {
+  emit("update:paymentDialog", true);
+  console.log("trigger");
+};
 </script>
 
 <template>
   <v-dialog
-    v-model="dialog"
+    v-model="props.dialog"
     transition="dialog-bottom-transition"
     fullscreen
     style="height: 100%"
   >
-    <template v-slot:activator="{ props: activatorProps }">
-      <v-btn icon="mdi-cart" color="primary" v-bind="activatorProps"></v-btn>
-    </template>
-
     <v-card style="height: 100%">
       <v-toolbar>
-        <v-btn icon="mdi-close" @click="dialog = false"></v-btn>
+        <v-btn icon="mdi-close" @click="closeDialog"></v-btn>
 
         <v-toolbar-title>Your Cart</v-toolbar-title>
       </v-toolbar>
@@ -66,9 +70,7 @@ const selectedItemsStore = useSelectedItemsStore();
             <v-divider class="border-opacity-100"></v-divider>
           </v-col>
           <v-col cols="12 py-2 text-center">
-            <v-btn
-              color="primary"
-              @click="selectedItemsStore.clearSelectedItems()"
+            <v-btn color="primary" @click="onPayment"
               >Continue to payment</v-btn
             >
           </v-col>

@@ -1,18 +1,16 @@
 <script setup>
 import { useInventoryListStore } from "../../store/inventoryList";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 import MobileCheckoutSection from "./component/MobileCheckoutSection.vue";
 import { useDisplay } from "vuetify";
 import PaymentSelection from "./component/PaymentSelection.vue";
 
 const { width } = useDisplay();
-const changePageLayout = computed(() => {
-  return width.value < 960;
-});
-
 const currentCategory = ref("All");
 const paymentDialog = ref(false);
+const checkoutDialog = ref(false);
+const searchText = ref("");
 
 const inventoryStore = useInventoryListStore();
 const selectedItemsStore = useSelectedItemsStore();
@@ -23,26 +21,38 @@ const onCategorySelection = (categoryName) => {
 
 const onPayment = () => {
   paymentDialog.value = true;
-  selectedItemsStore.clearSelectedItems();
 };
-const onClosePayment = () => {
-  paymentDialog.value = false;
-};
+const changePageLayout = computed(() => {
+  return width.value < 960;
+});
 
 const displayItems = computed(() => {
-  if (currentCategory.value === "All") {
-    return inventoryStore.value.flatMap((category) => category.items);
-  } else {
-    const selectedCategory = inventoryStore.value.find(
-      (category) => category.categoryName === currentCategory.value
+  const searchQuery = searchText.value?.trim().toLowerCase();
+
+  if (searchQuery) {
+    currentCategory.value = "All";
+    // do the search
+    return inventoryStore.value.flatMap((category) =>
+      category.items.filter((item) =>
+        item.itemName.toLowerCase().includes(searchQuery)
+      )
     );
-    return selectedCategory ? selectedCategory.items : [];
+  } else {
+    if (currentCategory.value === "All") {
+      return inventoryStore.value.flatMap((category) => category.items);
+    } else {
+      const selectedCategory = inventoryStore.value.find(
+        (category) => category.categoryName === currentCategory.value
+      );
+      return selectedCategory ? selectedCategory.items : [];
+    }
   }
 });
 </script>
 
 <template>
-  <PaymentSelection :dialog.sync="paymentDialog" />
+  <PaymentSelection v-model:dialog="paymentDialog" />
+
   <v-container class="container" fluid>
     <v-row no-gutters class="containerRow">
       <v-col class="pt-1" cols="auto">
@@ -52,7 +62,12 @@ const displayItems = computed(() => {
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="auto" class="pt-1" v-if="changePageLayout">
-        <MobileCheckoutSection />
+        <v-btn icon="mdi-cart" color="primary" @click="checkoutDialog = true">
+        </v-btn>
+        <MobileCheckoutSection
+          v-model:dialog="checkoutDialog"
+          v-model:paymentDialog="paymentDialog"
+        />
       </v-col>
     </v-row>
 
@@ -122,6 +137,7 @@ const displayItems = computed(() => {
                   single-line
                   clearable
                   dense
+                  v-model="searchText"
                 >
                 </v-text-field>
               </v-col>
