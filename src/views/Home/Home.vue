@@ -1,5 +1,5 @@
 <script setup>
-import { useDisplay, useTheme } from "vuetify";
+import { useDisplay } from "vuetify";
 
 import { computed } from "vue";
 
