@@ -12,7 +12,7 @@ import "@mdi/font/css/materialdesignicons.css";
 import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
 
 // Import custom SASS file
-import "./styles/main.scss";
+// import "@/scss/variables.scss";
 
 //Store
 import { createPinia } from "pinia";

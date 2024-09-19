@@ -271,8 +271,7 @@ const onItemRemove = (item) => {
 </template>
 
 <style scoped lang="scss">
-@import "../../styles/main.scss";
-
+@import "../../scss/variables.scss";
 .container {
   height: 100vh;
 }
@@ -295,7 +294,7 @@ const onItemRemove = (item) => {
 
 .outlineContainer {
   border-radius: 8px;
-  border: 2px solid $primary-color;
+  border: 2px solid $primary;
   height: 100%;
   overflow: auto;
 }
