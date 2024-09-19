@@ -1,6 +1,6 @@
 <script setup>
 import { useInventoryListStore } from "../../store/inventoryList";
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 import MobileCheckoutSection from "./component/MobileCheckoutSection.vue";
 import { useDisplay } from "vuetify";
@@ -71,7 +71,7 @@ const onItemRemove = (item) => {
 <template>
   <PaymentSelection v-model:dialog="paymentDialog" />
 
-  <v-container class="container" fluid>
+  <v-container class="container px-2" fluid>
     <v-row no-gutters class="containerRow">
       <v-col class="pt-1" cols="auto">
         <v-btn @click="$router.push('/')" color="primary" variant="text" icon>
@@ -80,7 +80,15 @@ const onItemRemove = (item) => {
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="auto" class="pt-1" v-if="changePageLayout">
-        <v-btn icon="mdi-cart" color="primary" @click="checkoutDialog = true">
+        <v-btn
+          variant="text"
+          icon
+          color="primary"
+          @click="checkoutDialog = true"
+        >
+          <v-badge color="error" :content="selectedItemsStore.totalItem">
+            <v-icon icon="mdi-cart" size="x-large"></v-icon>
+          </v-badge>
         </v-btn>
         <MobileCheckoutSection
           v-model:dialog="checkoutDialog"
@@ -161,7 +169,13 @@ const onItemRemove = (item) => {
               </v-col>
 
               <v-col cols="12" md="6" lg="4" class="pa-2">
-                <v-btn variant="outlined" block height="67" class="text-none">
+                <v-btn
+                  variant="outlined"
+                  block
+                  height="67"
+                  class="text-none"
+                  color=""
+                >
                   Custom Item
                 </v-btn>
               </v-col>
@@ -175,6 +189,7 @@ const onItemRemove = (item) => {
               >
                 <v-btn
                   variant="outlined"
+                  color=""
                   block
                   class="text-none"
                   height="auto"
@@ -231,6 +246,7 @@ const onItemRemove = (item) => {
                         height="24"
                         style="margin-right: -24px"
                         @click="onItemRemove(item)"
+                        color="error"
                       >
                       </v-btn>
                     </v-col>

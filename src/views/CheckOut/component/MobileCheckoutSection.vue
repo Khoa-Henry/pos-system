@@ -10,7 +10,6 @@ const closeDialog = () => {
 
 const onPayment = () => {
   emit("update:paymentDialog", true);
-  console.log("trigger");
 };
 </script>
 
@@ -25,7 +24,9 @@ const onPayment = () => {
       <v-toolbar>
         <v-btn icon="mdi-close" @click="closeDialog"></v-btn>
 
-        <v-toolbar-title>Your Cart</v-toolbar-title>
+        <v-toolbar-title
+          >Your Cart ({{ selectedItemsStore.totalItem }})</v-toolbar-title
+        >
       </v-toolbar>
 
       <v-container fluid class="pb-0" style="overflow: auto; height: 100%">

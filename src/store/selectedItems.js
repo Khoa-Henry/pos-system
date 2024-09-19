@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export const useSelectedItemsStore = defineStore("selectedItems", {
   state: () => {
-    return { items: [], totalPrice: 0.0 };
+    return { items: [], totalPrice: 0.0, totalItem: 0 };
   },
 
   actions: {
@@ -23,6 +23,7 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
 
       this.totalPrice =
         this.totalPrice + Math.round(item.pricePerUnit * 100) / 100;
+      this.totalItem = this.totalItem + 1;
     },
     deleteSelectedItem(item) {
       const updatedItem = {
@@ -45,10 +46,12 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
 
       this.totalPrice =
         this.totalPrice - Math.round(item.value.pricePerUnit * 100) / 100;
+      this.totalItem = this.totalItem - 1;
     },
     clearSelectedItems() {
       this.items = [];
-      this.totalPrice = 0;
+      this.totalPrice = 0.0;
+      this.totalItem = 0;
     },
   },
 });

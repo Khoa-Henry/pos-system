@@ -1,16 +1,15 @@
-<script setup>
-import { RouterLink } from "vue-router";
-</script>
+<script setup></script>
 
 <template>
-  <v-container class="container" fluid>
+  <v-container class="container px-2" fluid>
     <v-row no-gutters class="containerRow">
-      <v-col>
-        <RouterLink to="/">
-          <v-icon icon="mdi-chevron-left" class="icon"> </v-icon>
-        </RouterLink>
-      </v-col> </v-row
-  ></v-container>
+      <v-col class="pt-1" cols="auto">
+        <v-btn @click="$router.push('/')" color="primary" variant="text" icon>
+          <v-icon icon="mdi-chevron-left" class="icon"></v-icon>
+        </v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <style scoped>
@@ -19,6 +18,7 @@ import { RouterLink } from "vue-router";
 }
 .containerRow {
   margin: 0;
+  height: 6%;
 }
 .icon {
   font-size: 3rem;
