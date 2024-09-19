@@ -14,7 +14,7 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  styles: {
-    configFile: "src/styles/main.scss",
-  },
+  // styles: {
+  //   configFile: "src/styles/main.scss",
+  // },
 });
