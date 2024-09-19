@@ -7,6 +7,7 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
 
   actions: {
     addSelectItem(item) {
+      const updatedItem = { ...item, quantity: item.quantity - 1 };
       const existingItem = this.items.find(
         (existing) =>
           existing.value.itemId === item.itemId &&
@@ -15,14 +16,19 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
 
       if (existingItem) {
         existingItem.count++;
+        existingItem.value.quantity--;
       } else {
-        this.items.push({ value: item, count: 1 });
+        this.items.push({ value: updatedItem, count: 1 });
       }
 
       this.totalPrice =
         this.totalPrice + Math.round(item.pricePerUnit * 100) / 100;
     },
     deleteSelectedItem(item) {
+      const updatedItem = {
+        value: { ...item.value, quantity: item.value.quantity + 1 },
+        count: item.count - 1,
+      };
       const index = this.items.findIndex(
         (existing) =>
           existing.value.itemId === item.value.itemId &&
@@ -30,9 +36,9 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
       );
 
       if (index !== -1) {
-        item.count--;
+        this.items[index] = updatedItem;
 
-        if (item.count === 0) {
+        if (this.items[index].count === 0) {
           this.items.splice(index, 1);
         }
       }

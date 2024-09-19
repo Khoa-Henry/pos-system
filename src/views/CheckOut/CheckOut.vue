@@ -48,6 +48,24 @@ const displayItems = computed(() => {
     }
   }
 });
+
+const onItemSelection = (item) => {
+  // add item to list
+  selectedItemsStore.addSelectItem(item);
+
+  // Decrease the item's quantity
+  const updatedItem = { ...item, quantity: item.quantity - 1 };
+  inventoryStore.editItem(updatedItem);
+};
+
+const onItemRemove = (item) => {
+  // remove item to list
+  selectedItemsStore.deleteSelectedItem(item);
+
+  // Restore the item's quantity back to the store
+  const updatedItem = { ...item.value, quantity: item.value.quantity + 1 };
+  inventoryStore.editItem(updatedItem);
+};
 </script>
 
 <template>
@@ -161,7 +179,7 @@ const displayItems = computed(() => {
                   class="text-none"
                   height="auto"
                   :disabled="item.quantity <= 0"
-                  @click="selectedItemsStore.addSelectItem(item)"
+                  @click="onItemSelection(item)"
                 >
                   <v-container class="px-0" style="max-width: 352px">
                     <v-row no-gutters>
@@ -212,8 +230,9 @@ const displayItems = computed(() => {
                         variant="text"
                         height="24"
                         style="margin-right: -24px"
-                        @click="selectedItemsStore.deleteSelectedItem(item)"
-                      ></v-btn>
+                        @click="onItemRemove(item)"
+                      >
+                      </v-btn>
                     </v-col>
                   </v-row>
                 </v-container>
