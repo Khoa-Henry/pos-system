@@ -34,18 +34,26 @@ const onPayment = () => {
           <v-col cols="12">
             <v-container fluid class="pa-0">
               <v-row no-gutters>
-                <v-col cols="auto">{{ item.value.itemName }} </v-col>
+                <v-col cols="auto"
+                  >{{ item.value.itemName }} ({{ item.count }})
+                </v-col>
                 <v-col cols="true" align-self="center" class="px-1">
                   <v-divider class="border-opacity-100"></v-divider>
                 </v-col>
                 <v-col cols="auto">
-                  {{ item.value.pricePerUnit }} ({{ item.count }})
+                  {{
+                    Math.abs(item.value.pricePerUnit).toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    })
+                  }}
                 </v-col>
                 <v-col cols="auto" align-self="center">
                   <v-btn
                     icon="mdi-delete"
                     variant="text"
                     height="24"
+                    color="error"
                     style="margin-right: -24px"
                     @click="selectedItemsStore.deleteSelectedItem(item)"
                   ></v-btn>
@@ -71,7 +79,14 @@ const onPayment = () => {
             <v-divider class="border-opacity-100"></v-divider>
           </v-col>
           <v-col cols="12 py-2 text-center">
-            <v-btn color="primary" @click="onPayment"
+            <v-btn
+              color="primary"
+              @click="
+                () => {
+                  onPayment();
+                  closeDialog();
+                }
+              "
               >Continue to payment</v-btn
             >
           </v-col>
