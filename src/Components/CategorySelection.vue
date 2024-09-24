@@ -5,13 +5,24 @@ import { useInventoryListStore } from "../store/inventoryList";
 const inventoryStore = useInventoryListStore();
 
 // Define the prop
-const { currentCategory } = defineProps(["currentCategory"]);
+const { currentCategory, isEditing = false } = defineProps([
+  "currentCategory",
+  "isEditing",
+]);
 // Define emits to notify parent of updates
 const emit = defineEmits(["update:currentCategory"]);
 
 // Method to emit updated value
 const onCategorySelection = (categoryName) => {
   emit("update:currentCategory", categoryName); // Emit the new value
+
+  if (isEditing) {
+    // display item on the side or modal when in mobile
+
+    if (currentCategory !== "All") {
+    } else {
+    }
+  }
 };
 </script>
 
@@ -38,15 +49,39 @@ const onCategorySelection = (categoryName) => {
         >
           <v-btn
             :variant="
-              currentCategory === category.categoryName ? 'elevated' : ''
+              isEditing
+                ? currentCategory === category.categoryName
+                  ? 'tonal'
+                  : ''
+                : currentCategory === category.categoryName
+                ? 'elevated'
+                : ''
             "
-            :color="currentCategory === category.categoryName ? 'primary' : ''"
+            :color="
+              isEditing
+                ? ''
+                : currentCategory === category.categoryName
+                ? 'primary'
+                : ''
+            "
             block
             class="text-none"
             @click="onCategorySelection(category.categoryName)"
             height="50"
           >
             {{ category.categoryName }}
+          </v-btn>
+        </v-col>
+        <v-col cols="12">
+          <v-btn
+            v-if="isEditing"
+            block
+            class="text-none"
+            height="50"
+            variant="tonal"
+            color="primary"
+          >
+            <div>+</div>
           </v-btn>
         </v-col>
       </v-row>

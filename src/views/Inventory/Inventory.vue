@@ -18,8 +18,14 @@ const currentCategory = ref("All");
       </v-row>
 
       <v-row no-gutters class="sectionCol">
-        <CategorySelection v-model:currentCategory="currentCategory" />
-        <ItemSelection v-model:currentCategory="currentCategory" />
+        <CategorySelection
+          v-model:currentCategory="currentCategory"
+          :isEditing="true"
+        />
+        <ItemSelection
+          v-model:currentCategory="currentCategory"
+          :isEditing="true"
+        />
       </v-row>
     </div>
   </v-container>

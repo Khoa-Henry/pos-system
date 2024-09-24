@@ -8,7 +8,10 @@ const inventoryStore = useInventoryListStore();
 const selectedItemsStore = useSelectedItemsStore();
 
 // Define the prop
-const { currentCategory } = defineProps(["currentCategory"]);
+const { currentCategory, isEditing = false } = defineProps([
+  "currentCategory",
+  "isEditing",
+]);
 // Define emits to notify parent of updates
 const emit = defineEmits(["update:currentCategory"]);
 const searchText = ref("");
@@ -37,6 +40,7 @@ const displayItems = computed(() => {
   }
 });
 
+// when isEditable, different function fires
 const onItemSelection = (item) => {
   // add item to list
   selectedItemsStore.addSelectItem(item);
@@ -44,6 +48,10 @@ const onItemSelection = (item) => {
   // Decrease the item's quantity
   const updatedItem = { ...item, quantity: item.quantity - 1 };
   inventoryStore.editItem(updatedItem);
+};
+
+const onEditItem = (item) => {
+  // display item on the side
 };
 </script>
 
@@ -79,8 +87,19 @@ const onItemSelection = (item) => {
                   class="text-none"
                   color="primary"
                   @click="customItemDialog = true"
+                  v-if="!isEditing"
                 >
                   Custom Item
+                </v-btn>
+                <v-btn
+                  variant="tonal"
+                  block
+                  height="67"
+                  class="text-none"
+                  color="primary"
+                  v-if="isEditing"
+                >
+                  +
                 </v-btn>
               </v-col>
 
@@ -92,13 +111,12 @@ const onItemSelection = (item) => {
                 class="pa-2"
               >
                 <v-btn
-                  variant="outlined"
-                  color=""
+                  :variant="isEditing ? 'tonal' : 'outlined'"
                   block
                   class="text-none"
                   height="auto"
-                  :disabled="item.quantity <= 0"
-                  @click="onItemSelection(item)"
+                  :disabled="isEditing ? false : item.quantity <= 0"
+                  @click="isEditing ? () => {} : onItemSelection(item)"
                 >
                   <v-container class="px-0" style="max-width: 352px">
                     <v-row no-gutters>
