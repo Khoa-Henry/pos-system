@@ -8,7 +8,7 @@ const emit = defineEmits(["update:dialog"]);
 const selectedItemsStore = useSelectedItemsStore();
 const itemName = ref("");
 const price = ref();
-const qty = ref(0);
+const qty = ref();
 
 const rules = [(v) => !!v || "Required"];
 
@@ -22,7 +22,7 @@ const formatCurrency = () => {
     price.value = (Math.round(value * 100) / 100).toFixed(2);
   }
 };
-const test = () => {
+const onSubmit = () => {
   if (price.value && qty.value && itemName.value) {
     // convert into numbers
     const itemObj = {
@@ -49,7 +49,7 @@ const test = () => {
       </v-toolbar>
 
       <v-container fluid>
-        <v-form @submit.prevent="test">
+        <v-form @submit.prevent="onSubmit">
           <v-row>
             <v-col cols="12" sm="6"
               ><v-text-field
@@ -73,6 +73,7 @@ const test = () => {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="qty"
+                placeholder="0"
                 color="primary"
                 label="Quantity"
                 type="number"

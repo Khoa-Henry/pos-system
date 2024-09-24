@@ -6,13 +6,10 @@ import router from "./router";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import "vuetify/styles";
 
 import "@mdi/font/css/materialdesignicons.css";
 import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
-
-// Import custom SASS file
-import "@/scss/variables.scss";
-import "vuetify/styles";
 
 //Store
 import { createPinia } from "pinia";

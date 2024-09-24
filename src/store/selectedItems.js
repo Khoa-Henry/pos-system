@@ -8,23 +8,27 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
   actions: {
     addCustomItem(cItem, count) {
       const existingItem = this.items.find(
-        (existing) => existing.value.itemName === cItem.itemName
+        (existing) =>
+          existing.value.itemName === cItem.itemName &&
+          existing.value.itemId === cItem.itemId
       );
 
       if (existingItem) {
-        existingItem.count = existingItem.count + count;
+        existingItem.count += count;
       } else {
         this.items.push({ value: cItem, count: count });
       }
 
-      this.totalPrice =
-        this.totalPrice + Math.round(cItem.pricePerUnit * count * 100) / 100;
-      this.totalItem = this.totalItem + count;
+      this.totalPrice += Math.round(cItem.pricePerUnit * count * 100) / 100;
+      this.totalItem += count;
     },
+
     addSelectItem(item) {
       const updatedItem = { ...item, quantity: item.quantity - 1 };
       const existingItem = this.items.find(
-        (existing) => existing.value.itemName === item.itemName
+        (existing) =>
+          existing.value.itemName === item.itemName &&
+          existing.value.itemId === item.itemId
       );
 
       if (existingItem) {
@@ -34,17 +38,19 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
         this.items.push({ value: updatedItem, count: 1 });
       }
 
-      this.totalPrice =
-        this.totalPrice + Math.round(item.pricePerUnit * 100) / 100;
-      this.totalItem = this.totalItem + 1;
+      this.totalPrice += Math.round(item.pricePerUnit * 100) / 100;
+      this.totalItem += 1;
     },
+
     deleteSelectedItem(item) {
       const updatedItem = {
         value: { ...item.value, quantity: item.value.quantity + 1 },
         count: item.count - 1,
       };
       const index = this.items.findIndex(
-        (existing) => existing.value.itemName === item.value.itemName
+        (existing) =>
+          existing.value.itemName === item.value.itemName &&
+          existing.value.itemId === item.value.itemId
       );
 
       if (index !== -1) {
@@ -55,10 +61,10 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
         }
       }
 
-      this.totalPrice =
-        this.totalPrice - Math.round(item.value.pricePerUnit * 100) / 100;
-      this.totalItem = this.totalItem - 1;
+      this.totalPrice -= Math.round(item.value.pricePerUnit * 100) / 100;
+      this.totalItem -= 1;
     },
+
     clearSelectedItems() {
       this.items = [];
       this.totalPrice = 0.0;
