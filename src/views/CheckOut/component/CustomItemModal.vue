@@ -49,7 +49,7 @@ const test = () => {
       </v-toolbar>
 
       <v-container fluid>
-        <v-form @submit.prevent>
+        <v-form @submit.prevent="test">
           <v-row>
             <v-col cols="12" sm="6"
               ><v-text-field
@@ -82,9 +82,7 @@ const test = () => {
             <v-col cols="12" style="padding: 0"></v-col>
             <v-col cols="12" md="6" style="padding: 0"></v-col>
             <v-col cols="12" md="6">
-              <v-btn color="primary" type="submit" block @click="test"
-                >Submit</v-btn
-              >
+              <v-btn color="primary" type="submit" block>Submit</v-btn>
             </v-col>
           </v-row>
         </v-form>

@@ -14,7 +14,7 @@ const isMobile = computed(() => {
 const items = [
   { text: "Setting", href: "/", icon: "mdi-cogs" },
   { text: "Logout", href: "/", icon: "mdi-logout" },
-  { text: "Inventory", href: "/", icon: "mdi-pencil" },
+  { text: "Inventory", href: "/inventory", icon: "mdi-pencil" },
   { text: "History", href: "/history", icon: "mdi-history" },
   { text: "Checkout", href: "/checkout", icon: "mdi-table" },
   { text: "Reports", href: "/", icon: "mdi-chart-areaspline" },
@@ -52,7 +52,7 @@ const items = [
           color="primary"
           class="nav-link"
           size="large"
-          @click="$router.push(item.href)"
+          @click="this.$router.push(item.href)"
           :style="{
             transform: `rotate(-${(360 / items.length) * index}deg)`,
           }"

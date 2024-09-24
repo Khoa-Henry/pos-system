@@ -220,7 +220,7 @@ const onItemRemove = (item) => {
           <v-container
             fluid
             class="pb-1 px-2 pt-2"
-            style="height: 90%; overflow: auto"
+            style="height: 88%; overflow: auto"
           >
             <v-sheet height="100%" elevation="4" rounded>
               <v-row v-for="item in selectedItemsStore.items" no-gutters>
@@ -319,11 +319,4 @@ const onItemRemove = (item) => {
   height: 100%;
   overflow: auto;
 }
-
-// .outlineContainer {
-//   border-radius: 8px;
-//   border: 2px solid $primary;
-//   height: 100%;
-//   overflow: auto;
-// }
 </style>
