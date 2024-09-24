@@ -162,7 +162,6 @@ const changePageLayout = computed(() => {
 </template>
 
 <style scoped lang="scss">
-@import "../../scss/variables.scss";
 .container {
   height: 100vh;
 }
