@@ -45,7 +45,7 @@ const changePageLayout = computed(() => {
           </v-btn>
         </v-col>
         <v-spacer></v-spacer>
-        <v-col cols="auto" class="pt-1" v-if="changePageLayout">
+        <v-col cols="auto" class="pt-1 pr-4" v-if="changePageLayout">
           <v-btn
             variant="text"
             icon

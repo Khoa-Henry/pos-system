@@ -1,5 +1,5 @@
 <script setup>
-import { computed, defineEmits, defineProps, ref } from "vue";
+import { computed, ref } from "vue";
 import { useInventoryListStore } from "../store/inventoryList";
 import { useSelectedItemsStore } from "../store/selectedItems";
 import ItemModal from "./ItemModal.vue";
@@ -51,7 +51,7 @@ const onItemSelection = (item) => {
 };
 
 const onEditItem = (item) => {
-  // display item on the side
+  // display item on the side or modal when in mobile
 };
 </script>
 

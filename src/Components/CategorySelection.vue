@@ -1,5 +1,4 @@
 <script setup>
-import { defineEmits, defineProps } from "vue";
 import { useInventoryListStore } from "../store/inventoryList";
 
 const inventoryStore = useInventoryListStore();

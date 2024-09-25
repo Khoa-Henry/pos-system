@@ -14,6 +14,9 @@ const rules = [(v) => !!v || "Required"];
 
 const closeDialog = () => {
   emit("update:dialog", false);
+  itemName.value = "";
+  price.value = null;
+  qty.value = 0;
 };
 
 const formatCurrency = () => {
@@ -33,9 +36,6 @@ const onSubmit = () => {
     selectedItemsStore.addCustomItem(itemObj, Number(qty.value));
 
     closeDialog();
-    itemName.value = "";
-    price.value = null;
-    qty.value = 0;
   }
 };
 </script>
