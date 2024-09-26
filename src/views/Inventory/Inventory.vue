@@ -5,6 +5,10 @@ import ItemSelection from "../../Components/ItemSelection.vue";
 
 const currentCategory = ref("All");
 const displayEditing = ref(false);
+const name = ref("");
+const qty = ref("");
+const price = ref();
+const category = "";
 </script>
 
 <template>
@@ -51,6 +55,19 @@ const displayEditing = ref(false);
                         label="Item ID"
                         type="number"
                         :rules="rules"
+                      />
+                    </v-col>
+                    <v-col cols="12" md="6" class="pa-2">
+                      <v-select
+                        label="Category"
+                        :items="[
+                          'California',
+                          'Colorado',
+                          'Florida',
+                          'Georgia',
+                          'Texas',
+                          'Wyoming',
+                        ]"
                       />
                     </v-col>
                     <v-col cols="12" md="6" class="pa-2">
