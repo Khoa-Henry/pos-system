@@ -1,13 +1,15 @@
 <script setup>
-import { useInventoryListStore } from "../store/inventoryList";
-
-const inventoryStore = useInventoryListStore();
-
 // Define the prop
-const { currentCategory, isEditing = false } = defineProps([
-  "currentCategory",
-  "isEditing",
-]);
+const {
+  currentCategory,
+  isEditing = false,
+  categoryList,
+} = defineProps({
+  currentCategory: { type: String, required: true },
+  isEditing: { type: Boolean },
+  categoryList: { type: Array, required: true },
+});
+
 // Define emits to notify parent of updates
 const emit = defineEmits(["update:currentCategory"]);
 
@@ -19,7 +21,9 @@ const onCategorySelection = (categoryName) => {
     // display item on the side or modal when in mobile
 
     if (currentCategory !== "All") {
+      // display editing
     } else {
+      // do nothing
     }
   }
 };
@@ -31,37 +35,33 @@ const onCategorySelection = (categoryName) => {
       <v-row no-gutters>
         <v-col cols="12">
           <v-btn
-            :variant="currentCategory === 'All' ? 'elevated' : ''"
+            :variant="currentCategory === 'All' ? 'elevated' : undefined"
             block
             class="text-none"
-            :color="currentCategory === 'All' ? 'primary' : ''"
+            :color="currentCategory === 'All' ? 'primary' : undefined"
             @click="onCategorySelection('All')"
             height="50"
           >
             <div>See all</div>
           </v-btn>
         </v-col>
-        <v-col
-          cols="12"
-          v-for="category in inventoryStore.value"
-          :key="category.id"
-        >
+        <v-col cols="12" v-for="category in categoryList" :key="category.id">
           <v-btn
             :variant="
               isEditing
                 ? currentCategory === category.categoryName
                   ? 'tonal'
-                  : ''
+                  : undefined
                 : currentCategory === category.categoryName
                 ? 'elevated'
-                : ''
+                : undefined
             "
             :color="
               isEditing
-                ? ''
+                ? undefined
                 : currentCategory === category.categoryName
                 ? 'primary'
-                : ''
+                : undefined
             "
             block
             class="text-none"

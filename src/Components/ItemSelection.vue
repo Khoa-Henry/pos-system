@@ -1,19 +1,24 @@
 <script setup>
 import { computed, ref } from "vue";
-import { useInventoryListStore } from "../store/inventoryList";
-import { useSelectedItemsStore } from "../store/selectedItems";
 import ItemModal from "./ItemModal.vue";
 
-const inventoryStore = useInventoryListStore();
-const selectedItemsStore = useSelectedItemsStore();
-
 // Define the prop
-const { currentCategory, isEditing = false } = defineProps([
-  "currentCategory",
-  "isEditing",
-]);
+const {
+  currentCategory,
+  isEditing = false,
+  inventoryStore,
+} = defineProps({
+  currentCategory: { type: String, required: true },
+  isEditing: { type: Boolean },
+  inventoryStore: { type: Array, required: true },
+});
+
 // Define emits to notify parent of updates
-const emit = defineEmits(["update:currentCategory"]);
+const emit = defineEmits([
+  "update:currentCategory",
+  "onItemSelection",
+  "onAddNewItem",
+]);
 const searchText = ref("");
 const customItemDialog = ref(false);
 
@@ -23,16 +28,16 @@ const displayItems = computed(() => {
   if (searchQuery) {
     emit("update:currentCategory", "All");
     // do the search
-    return inventoryStore.value.flatMap((category) =>
+    return inventoryStore.flatMap((category) =>
       category.items.filter((item) =>
         item.itemName.toLowerCase().includes(searchQuery)
       )
     );
   } else {
     if (currentCategory === "All") {
-      return inventoryStore.value.flatMap((category) => category.items);
+      return inventoryStore?.flatMap((category) => category.items);
     } else {
-      const selectedCategory = inventoryStore.value.find(
+      const selectedCategory = inventoryStore.find(
         (category) => category.categoryName === currentCategory
       );
       return selectedCategory ? selectedCategory.items : [];
@@ -40,18 +45,8 @@ const displayItems = computed(() => {
   }
 });
 
-// when isEditable, different function fires
 const onItemSelection = (item) => {
-  // add item to list
-  selectedItemsStore.addSelectItem(item);
-
-  // Decrease the item's quantity
-  const updatedItem = { ...item, quantity: item.quantity - 1 };
-  inventoryStore.editItem(updatedItem);
-};
-
-const onEditItem = (item) => {
-  // display item on the side or modal when in mobile
+  emit("onItemSelection", item);
 };
 </script>
 
@@ -97,6 +92,7 @@ const onEditItem = (item) => {
                   height="67"
                   class="text-none"
                   color="primary"
+                  @click="emit('onAddNewItem')"
                   v-if="isEditing"
                 >
                   +
@@ -116,7 +112,7 @@ const onEditItem = (item) => {
                   class="text-none"
                   height="auto"
                   :disabled="isEditing ? false : item.quantity <= 0"
-                  @click="isEditing ? () => {} : onItemSelection(item)"
+                  @click="onItemSelection(item)"
                 >
                   <v-container class="px-0" style="max-width: 352px">
                     <v-row no-gutters>

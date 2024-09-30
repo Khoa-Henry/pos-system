@@ -2,13 +2,28 @@
 import { ref } from "vue";
 import CategorySelection from "../../Components/CategorySelection.vue";
 import ItemSelection from "../../Components/ItemSelection.vue";
+import { useInventoryListStore } from "../../store/inventoryList";
+
+const inventoryStore = useInventoryListStore();
 
 const currentCategory = ref("All");
+const displayFields = ref(false);
+
 const displayEditing = ref(false);
 const name = ref("");
 const qty = ref("");
 const price = ref();
 const category = "";
+
+const onItemSelection = (item) => {
+  console.log(item);
+  displayFields.value = true;
+  // set to ref for adding or editing
+};
+
+const onAddNewItem = () => {
+  displayFields.value = true;
+};
 </script>
 
 <template>
@@ -25,27 +40,35 @@ const category = "";
       <v-row no-gutters class="sectionCol">
         <CategorySelection
           v-model:currentCategory="currentCategory"
+          :categoryList="inventoryStore.value"
           :isEditing="true"
         />
         <ItemSelection
           v-model:currentCategory="currentCategory"
+          :inventoryStore="inventoryStore.value"
+          @onItemSelection="onItemSelection"
           :isEditing="true"
+          @onAddNewItem="onAddNewItem"
         />
         <v-col cols="4" class="fullHeight">
           <v-container fluid class="pb-1 px-2 fullHeight">
             <v-sheet height="100%" elevation="4" rounded class="yHeight">
               <!-- hide when item is not selected -->
-              <v-form @submit.prevent="" class="yHeight">
+              <v-form @submit.prevent="" class="yHeight" v-if="displayFields">
                 <div style="flex: 1; overflow: auto; padding: 16px 8px 8px 8px">
-                  x button goes here
                   <v-row no-gutters>
-                    <v-col cols="12" md="6" class="pa-2">
-                      <v-text-field
-                        v-model="itemName"
+                    <v-col cols="12">
+                      <v-btn
+                        @click="displayFields = false"
                         color="primary"
-                        label="Item name"
-                        :rules="rules"
-                      />
+                        variant="text"
+                        icon
+                      >
+                        <v-icon icon="mdi-close"></v-icon>
+                      </v-btn>
+                    </v-col>
+                    <v-col cols="12" md="6" class="pa-2">
+                      <v-text-field color="primary" label="Item name" />
                     </v-col>
                     <v-col cols="12" md="6" class="pa-2">
                       <v-text-field
@@ -54,7 +77,6 @@ const category = "";
                         color="primary"
                         label="Item ID"
                         type="number"
-                        :rules="rules"
                       />
                     </v-col>
                     <v-col cols="12" md="6" class="pa-2">
@@ -75,20 +97,15 @@ const category = "";
                         label="Price per unit"
                         prefix="$"
                         placeholder="0.00"
-                        v-model="price"
                         type="number"
-                        :rules="rules"
-                        @blur="formatCurrency"
                       />
                     </v-col>
                     <v-col cols="12" md="6" class="pa-2">
                       <v-text-field
-                        v-model="qty"
                         placeholder="0"
                         color="primary"
                         label="Quantity"
                         type="number"
-                        :rules="rules"
                       />
                     </v-col>
                   </v-row>

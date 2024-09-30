@@ -31,6 +31,15 @@ const onPayment = () => {
 const changePageLayout = computed(() => {
   return width.value < 960;
 });
+
+const onItemSelection = (item) => {
+  // add item to list
+  selectedItemsStore.addSelectItem(item);
+
+  // Decrease the item's quantity
+  const updatedItem = { ...item, quantity: item.quantity - 1 };
+  inventoryStore.editItem(updatedItem);
+};
 </script>
 
 <template>
@@ -71,8 +80,15 @@ const changePageLayout = computed(() => {
       </v-row>
 
       <v-row no-gutters class="sectionCol">
-        <CategorySelection v-model:currentCategory="currentCategory" />
-        <ItemSelection v-model:currentCategory="currentCategory" />
+        <CategorySelection
+          v-model:currentCategory="currentCategory"
+          :categoryList="inventoryStore.value"
+        />
+        <ItemSelection
+          v-model:currentCategory="currentCategory"
+          :inventoryStore="inventoryStore.value"
+          @onItemSelection="onItemSelection"
+        />
         <v-col v-if="!changePageLayout" cols="4" class="fullHeight">
           <div class="yHeight">
             <v-container
