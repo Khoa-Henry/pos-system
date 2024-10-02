@@ -38,7 +38,7 @@ const onPayment = () => {
       </v-container>
 
       <v-container fluid>
-        <v-row>
+        <v-row no-gutters>
           <v-col cols="12 py-2">
             Total:
             {{
