@@ -1,4 +1,5 @@
 <script setup>
+import CheckoutList from "@/Components/CheckoutList.vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 
 const props = defineProps(["dialog", "paymentDialog"]);
@@ -30,38 +31,10 @@ const onPayment = () => {
       </v-toolbar>
 
       <v-container fluid class="pb-0" style="overflow: auto; height: 100%">
-        <v-row v-for="item in selectedItemsStore.items">
-          <v-col cols="12">
-            <v-container fluid class="pa-0">
-              <v-row no-gutters>
-                <v-col cols="auto"
-                  >{{ item.value.itemName }} ({{ item.count }})
-                </v-col>
-                <v-col cols="true" align-self="center" class="px-1">
-                  <v-divider class="border-opacity-100"></v-divider>
-                </v-col>
-                <v-col cols="auto">
-                  {{
-                    Math.abs(item.value.pricePerUnit).toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                    })
-                  }}
-                </v-col>
-                <v-col cols="auto" align-self="center">
-                  <v-btn
-                    icon="mdi-delete"
-                    variant="text"
-                    height="24"
-                    color="error"
-                    style="margin-right: -24px"
-                    @click="selectedItemsStore.deleteSelectedItem(item)"
-                  ></v-btn>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-        </v-row>
+        <CheckoutList
+          :list="selectedItemsStore.items"
+          @onItemRemove="selectedItemsStore.deleteSelectedItem(item)"
+        />
       </v-container>
 
       <v-container fluid>

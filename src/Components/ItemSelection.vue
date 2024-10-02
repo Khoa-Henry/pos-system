@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import ItemModal from "./ItemModal.vue";
+import CustomItemModal from "./CustomItemModal.vue";
 
 // Define the prop
 const {
@@ -14,11 +14,7 @@ const {
 });
 
 // Define emits to notify parent of updates
-const emit = defineEmits([
-  "update:currentCategory",
-  "onItemSelection",
-  "onAddNewItem",
-]);
+const emit = defineEmits(["update:currentCategory", "onItemSelection"]);
 const searchText = ref("");
 const customItemDialog = ref(false);
 
@@ -51,7 +47,7 @@ const onItemSelection = (item) => {
 </script>
 
 <template>
-  <ItemModal v-model:dialog="customItemDialog" />
+  <CustomItemModal v-model:dialog="customItemDialog" />
 
   <v-col cols="7" md="5" lg="6" style="padding: 0px; height: 100%">
     <v-container fluid class="px-0 pb-0 fullHeight">
@@ -92,7 +88,7 @@ const onItemSelection = (item) => {
                   height="67"
                   class="text-none"
                   color="primary"
-                  @click="emit('onAddNewItem')"
+                  @click="emit('onItemSelection')"
                   v-if="isEditing"
                 >
                   +

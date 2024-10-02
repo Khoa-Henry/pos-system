@@ -35,7 +35,15 @@ const onCategorySelection = (categoryName) => {
       <v-row no-gutters>
         <v-col cols="12">
           <v-btn
-            :variant="currentCategory === 'All' ? 'elevated' : undefined"
+            :variant="
+              isEditing
+                ? currentCategory === 'All'
+                  ? undefined
+                  : 'elevated'
+                : currentCategory === 'All'
+                ? 'elevated'
+                : 'text'
+            "
             block
             class="text-none"
             :color="currentCategory === 'All' ? 'primary' : undefined"
@@ -50,15 +58,17 @@ const onCategorySelection = (categoryName) => {
             :variant="
               isEditing
                 ? currentCategory === category.categoryName
-                  ? 'tonal'
+                  ? 'elevated'
                   : undefined
                 : currentCategory === category.categoryName
                 ? 'elevated'
-                : undefined
+                : 'text'
             "
             :color="
               isEditing
-                ? undefined
+                ? currentCategory === category.categoryName
+                  ? 'primary'
+                  : undefined
                 : currentCategory === category.categoryName
                 ? 'primary'
                 : undefined
@@ -88,7 +98,7 @@ const onCategorySelection = (categoryName) => {
   </v-col>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .sectionCol {
   height: 100%;
   overflow: auto;
