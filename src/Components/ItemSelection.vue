@@ -14,7 +14,11 @@ const {
 });
 
 // Define emits to notify parent of updates
-const emit = defineEmits(["update:currentCategory", "onItemSelection"]);
+const emit = defineEmits([
+  "update:currentCategory",
+  "onItemSelection",
+  "addCustomItem",
+]);
 const searchText = ref("");
 const customItemDialog = ref(false);
 
@@ -43,7 +47,10 @@ const displayItems = computed(() => {
 </script>
 
 <template>
-  <CustomItemModal v-model:dialog="customItemDialog" />
+  <CustomItemModal
+    v-model:dialog="customItemDialog"
+    @addCustomItem="(item, qty) => emit('addCustomItem', item, qty)"
+  />
 
   <v-col cols="7" md="5" lg="6" style="padding: 0px; height: 100%">
     <v-container fluid class="px-0 pb-0 fullHeight">

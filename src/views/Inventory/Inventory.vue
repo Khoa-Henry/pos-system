@@ -1,4 +1,5 @@
 <script setup>
+import CurrencyField from "@/Components/CurrencyField.vue";
 import PageLayout from "@/Components/PageLayout.vue";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
@@ -114,12 +115,9 @@ const onSubmit = () => {
                   />
                 </v-col>
                 <v-col cols="12" md="6" class="pa-2">
-                  <v-text-field
-                    v-model="price"
+                  <CurrencyField
+                    v-model:modelValue="price"
                     label="Price per unit"
-                    prefix="$"
-                    placeholder="0.00"
-                    type="number"
                   />
                 </v-col>
                 <v-col cols="12" md="6" class="pa-2">

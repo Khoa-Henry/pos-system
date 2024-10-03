@@ -1,12 +1,10 @@
 <script setup>
-import { useSelectedItemsStore } from "@/store/selectedItems";
 import { v4 as uuidv4 } from "uuid";
 import { ref } from "vue";
 import CurrencyField from "./CurrencyField.vue";
 
 const props = defineProps(["dialog"]);
-const emit = defineEmits(["update:dialog"]);
-const selectedItemsStore = useSelectedItemsStore();
+const emit = defineEmits(["update:dialog", "addCustomItem"]);
 const itemName = ref("");
 const price = ref("");
 const qty = ref();
@@ -28,7 +26,7 @@ const onSubmit = () => {
       itemName: itemName.value,
       pricePerUnit: Number(price.value),
     };
-    selectedItemsStore.addCustomItem(itemObj, Number(qty.value));
+    emit("addCustomItem", itemObj, Number(qty.value));
 
     closeDialog();
   }

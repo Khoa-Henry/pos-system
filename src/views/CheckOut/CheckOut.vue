@@ -81,7 +81,10 @@ const onItemSelection = (item) => {
         v-model:currentCategory="currentCategory"
         :inventoryStore="inventoryStore.value"
         @onItemSelection="onItemSelection"
+        @addCustomItem="selectedItemsStore.addCustomItem"
       />
+      <!-- addCustomItem is a multiple level emit example-->
+
       <v-col v-if="!changePageLayout" cols="4" class="fullHeight">
         <div class="yHeight">
           <v-container fluid class="pb-1 px-2" style="flex: 1; overflow: auto">
