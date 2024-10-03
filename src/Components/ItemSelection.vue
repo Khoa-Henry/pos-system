@@ -40,10 +40,6 @@ const displayItems = computed(() => {
     }
   }
 });
-
-const onItemSelection = (item) => {
-  emit("onItemSelection", item);
-};
 </script>
 
 <template>
@@ -108,7 +104,7 @@ const onItemSelection = (item) => {
                   class="text-none"
                   height="auto"
                   :disabled="isEditing ? false : item.quantity <= 0"
-                  @click="onItemSelection(item)"
+                  @click="emit('onItemSelection', item)"
                 >
                   <v-container class="px-0" style="max-width: 352px">
                     <v-row no-gutters>
