@@ -6,6 +6,8 @@ import CategorySelection from "../../Components/CategorySelection.vue";
 import ItemSelection from "../../Components/ItemSelection.vue";
 import { useInventoryListStore } from "../../store/inventoryList";
 
+const generateId = Math.floor(Math.random() * 90000) + 10000;
+
 const { width } = useDisplay();
 const inventoryStore = useInventoryListStore();
 
@@ -28,8 +30,7 @@ const onItemSelection = (item) => {
   name.value = item?.itemName || "";
   qty.value = item?.quantity || 0;
   price.value = item?.pricePerUnit || "";
-  // generate new id for new item
-  id.value = item?.itemId || "";
+  id.value = item?.itemId || generateId.toString();
 
   const findCategory = inventoryStore.value.find((category) =>
     category.items.some(
@@ -85,6 +86,7 @@ const onSubmit = () => {
                     <v-icon icon="mdi-close"></v-icon>
                   </v-btn>
                 </v-col>
+
                 <v-col cols="12" md="6" class="pa-2">
                   <v-text-field
                     color="primary"
@@ -98,7 +100,6 @@ const onSubmit = () => {
                     readonly
                     color="primary"
                     label="Item ID"
-                    type="number"
                   />
                 </v-col>
                 <v-col cols="12" md="6" class="pa-2">

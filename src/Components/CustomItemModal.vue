@@ -2,12 +2,13 @@
 import { useSelectedItemsStore } from "@/store/selectedItems";
 import { v4 as uuidv4 } from "uuid";
 import { ref } from "vue";
+import CurrencyField from "./CurrencyField.vue";
 
 const props = defineProps(["dialog"]);
 const emit = defineEmits(["update:dialog"]);
 const selectedItemsStore = useSelectedItemsStore();
 const itemName = ref("");
-const price = ref();
+const price = ref("");
 const qty = ref();
 
 const rules = [(v) => !!v || "Required"];
@@ -19,12 +20,6 @@ const closeDialog = () => {
   qty.value = 0;
 };
 
-const formatCurrency = () => {
-  if (price.value) {
-    const value = parseFloat(price.value);
-    price.value = (Math.round(value * 100) / 100).toFixed(2);
-  }
-};
 const onSubmit = () => {
   if (price.value && qty.value && itemName.value) {
     // convert into numbers
@@ -57,19 +52,15 @@ const onSubmit = () => {
                 color="primary"
                 label="Item name"
                 :rules="rules"
-              ></v-text-field
-            ></v-col>
-            <v-col cols="12" sm="6"
-              ><v-text-field
-                label="Price per unit"
-                prefix="$"
-                placeholder="0.00"
-                v-model="price"
-                type="number"
+              />
+            </v-col>
+            <v-col cols="12" sm="6">
+              <CurrencyField
+                v-model:modelValue="price"
                 :rules="rules"
-                @blur="formatCurrency"
-              ></v-text-field
-            ></v-col>
+                label="Price per unit"
+              />
+            </v-col>
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="qty"
@@ -78,7 +69,7 @@ const onSubmit = () => {
                 label="Quantity"
                 type="number"
                 :rules="rules"
-              ></v-text-field>
+              />
             </v-col>
             <v-col cols="12" style="padding: 0"></v-col>
             <v-col cols="12" md="6" style="padding: 0"></v-col>
