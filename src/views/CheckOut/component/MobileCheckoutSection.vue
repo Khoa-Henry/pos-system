@@ -5,12 +5,10 @@ import { useSelectedItemsStore } from "@/store/selectedItems";
 const props = defineProps(["dialog"]);
 const emit = defineEmits(["update:dialog", "update:paymentDialog"]);
 const selectedItemsStore = useSelectedItemsStore();
-const closeDialog = () => {
-  emit("update:dialog", false);
-};
 
 const onPayment = () => {
   emit("update:paymentDialog", true);
+  emit("update:dialog", false);
 };
 </script>
 
@@ -23,7 +21,7 @@ const onPayment = () => {
   >
     <v-card style="height: 100%">
       <v-toolbar>
-        <v-btn icon="mdi-close" @click="closeDialog"></v-btn>
+        <v-btn icon="mdi-close" @click="emit('update:dialog', false)" />
 
         <v-toolbar-title
           >Your Cart ({{ selectedItemsStore.totalItem }})</v-toolbar-title
@@ -52,14 +50,7 @@ const onPayment = () => {
             <v-divider class="border-opacity-100"></v-divider>
           </v-col>
           <v-col cols="12 py-2 text-center">
-            <v-btn
-              color="primary"
-              @click="
-                () => {
-                  onPayment();
-                  closeDialog();
-                }
-              "
+            <v-btn color="primary" @click="onPayment"
               >Continue to payment</v-btn
             >
           </v-col>

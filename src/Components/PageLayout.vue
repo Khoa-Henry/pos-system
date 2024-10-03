@@ -1,7 +1,14 @@
 <script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const { displayIcon } = defineProps({
   displayIcon: { type: Boolean, required: true },
 });
+
+const navigateHome = () => {
+  router.push("/");
+};
 </script>
 
 <template>
@@ -9,7 +16,7 @@ const { displayIcon } = defineProps({
     <div class="yHeight">
       <v-row no-gutters class="containerRow">
         <v-col class="pt-1">
-          <v-btn @click="$router.push('/')" color="primary" variant="text" icon>
+          <v-btn @click="navigateHome" color="primary" variant="text" icon>
             <v-icon icon="mdi-chevron-left" class="icon"></v-icon>
           </v-btn>
         </v-col>

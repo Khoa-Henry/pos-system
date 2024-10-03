@@ -15,32 +15,32 @@ const currentCategory = ref("All");
 const paymentDialog = ref(false);
 const checkoutDialog = ref(false);
 
-const inventoryStore = useInventoryListStore();
-const selectedItemsStore = useSelectedItemsStore();
-
-const onItemRemove = (item) => {
-  // remove item to list
-  selectedItemsStore.deleteSelectedItem(item);
-
-  // Restore the item's quantity back to the store
-  const updatedItem = { ...item.value, quantity: item.value.quantity + 1 };
-  inventoryStore.editItem(updatedItem);
-};
-
-const onPayment = () => {
-  paymentDialog.value = true;
-};
 const changePageLayout = computed(() => {
   return width.value < 960;
 });
 
+const inventoryStore = useInventoryListStore();
+const selectedItemsStore = useSelectedItemsStore();
+
+const updateItemQuantity = (item, adjustment) => {
+  const updatedItem = { ...item, quantity: item.quantity + adjustment };
+  inventoryStore.editItem(updatedItem);
+};
+
+const onItemRemove = (item) => {
+  // remove item to list
+  selectedItemsStore.deleteSelectedItem(item);
+  updateItemQuantity(item.value, 1); // Restore the item's quantity
+};
+
 const onItemSelection = (item) => {
   // add item to list
   selectedItemsStore.addSelectItem(item);
+  updateItemQuantity(item, -1); // Decrease the item's quantity
+};
 
-  // Decrease the item's quantity
-  const updatedItem = { ...item, quantity: item.quantity - 1 };
-  inventoryStore.editItem(updatedItem);
+const onPayment = () => {
+  paymentDialog.value = true;
 };
 </script>
 
