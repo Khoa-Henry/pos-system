@@ -2,7 +2,7 @@
 import CheckoutList from "@/Components/CheckoutList.vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 
-const props = defineProps(["dialog", "paymentDialog"]);
+const props = defineProps(["dialog"]);
 const emit = defineEmits(["update:dialog", "update:paymentDialog"]);
 const selectedItemsStore = useSelectedItemsStore();
 const closeDialog = () => {
