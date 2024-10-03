@@ -49,7 +49,7 @@ const displayItems = computed(() => {
 <template>
   <CustomItemModal
     v-model:dialog="customItemDialog"
-    @addCustomItem="(item, qty) => emit('addCustomItem', item, qty)"
+    @addCustomItem="(item, count) => emit('addCustomItem', item, count)"
   />
 
   <v-col cols="7" md="5" lg="6" style="padding: 0px; height: 100%">
