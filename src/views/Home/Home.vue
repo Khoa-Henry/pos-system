@@ -1,9 +1,10 @@
 <script setup>
+import { computed } from "vue";
+import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 
-import { computed } from "vue";
-
 const { width } = useDisplay();
+const router = useRouter();
 const translateValue = computed(() => (width.value < 700 ? "120px" : "220px"));
 const isMobile = computed(() => {
   return width.value < 700;
@@ -52,7 +53,7 @@ const items = [
           color="primary"
           class="nav-link"
           size="large"
-          @click="this.$router.push(item.href)"
+          @click="router.push(item.href)"
           :style="{
             transform: `rotate(-${(360 / items.length) * index}deg)`,
           }"

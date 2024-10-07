@@ -26,11 +26,10 @@ const changePageLayout = computed(() => {
 
 const onItemSelection = (item) => {
   displayEditing.value = true;
-
   // set to ref for adding or editing
   name.value = item?.itemName || "";
   qty.value = item?.quantity || 0;
-  price.value = item?.pricePerUnit || "";
+  price.value = item?.pricePerUnit.toString() || "";
   id.value = item?.itemId || generateId.toString();
 
   const findCategory = inventoryStore.value.find((category) =>
