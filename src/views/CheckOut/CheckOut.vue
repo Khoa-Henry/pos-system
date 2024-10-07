@@ -24,7 +24,7 @@ const selectedItemsStore = useSelectedItemsStore();
 
 const updateItemQuantity = (item, adjustment) => {
   const updatedItem = { ...item, quantity: item.quantity + adjustment };
-  inventoryStore.editItem(updatedItem);
+  inventoryStore.updateItem(updatedItem);
 };
 
 const onItemRemove = (item) => {

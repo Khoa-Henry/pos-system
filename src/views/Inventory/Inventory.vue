@@ -13,7 +13,8 @@ const { width } = useDisplay();
 const inventoryStore = useInventoryListStore();
 
 const currentCategory = ref("All");
-const displayEditing = ref(false);
+const displayForm = ref(false);
+const displayDelete = ref(false);
 const name = ref("");
 const qty = ref();
 const id = ref("");
@@ -25,7 +26,8 @@ const changePageLayout = computed(() => {
 });
 
 const onItemSelection = (item) => {
-  displayEditing.value = true;
+  displayForm.value = true;
+  displayDelete.value = item ? true : false;
   // set to ref for adding or editing
   name.value = item?.itemName || "";
   qty.value = item?.quantity || 0;
@@ -40,9 +42,29 @@ const onItemSelection = (item) => {
   category.value = findCategory?.categoryName || "";
 };
 
+const addOrDeleteItem = (isAdd) => {
+  const itemObj = {
+    itemId: id.value,
+    itemName: name.value,
+    quantity: qty.value,
+    pricePerUnit: price.value,
+  };
+  if (isAdd) {
+    inventoryStore.addItem(itemObj, category.value);
+  } else {
+    inventoryStore.deleteItem(itemObj, category.value);
+  }
+
+  displayForm.value = false;
+};
+
 const onSubmit = () => {
-  // add to list
-  console.log(name.value, qty.value, id.value, price.value, category.value);
+  addOrDeleteItem(true);
+};
+
+const onDeleteItem = () => {
+  // TODO: new a confirm modal or something here
+  addOrDeleteItem(false);
 };
 </script>
 
@@ -69,16 +91,17 @@ const onSubmit = () => {
       <v-container fluid class="pb-1 px-2 fullHeight">
         <v-sheet height="100%" elevation="4" rounded class="yHeight">
           <!-- hide when item is not selected -->
+          <!-- TODO: this is gonna be its own component, the form -->
           <v-form
             @submit.prevent="onSubmit()"
             class="yHeight"
-            v-if="displayEditing"
+            v-if="displayForm"
           >
             <div style="flex: 1; overflow: auto; padding: 4px 8px 8px 8px">
               <v-row no-gutters>
                 <v-col cols="12">
                   <v-btn
-                    @click="displayEditing = false"
+                    @click="displayForm = false"
                     color="primary"
                     variant="text"
                     icon
@@ -133,9 +156,18 @@ const onSubmit = () => {
             <v-row
               no-gutters
               justify="center"
-              style="flex: 0 0 auto; padding: 8px 8px 16px 8px"
+              style="flex: 0 0 auto; padding: 0px 4px 16px 4px"
             >
-              <v-col cols="6">
+              <v-col cols="6" class="pa-1">
+                <v-btn
+                  color="error"
+                  block
+                  @click="onDeleteItem"
+                  v-if="displayDelete"
+                  >Delete</v-btn
+                >
+              </v-col>
+              <v-col cols="6" class="pa-1">
                 <v-btn color="primary" block type="submit">Save</v-btn>
               </v-col>
             </v-row>
