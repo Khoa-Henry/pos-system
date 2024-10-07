@@ -1,6 +1,9 @@
 <script setup>
 const { modelValue } = defineProps({
-  modelValue: { type: String, required: true },
+  modelValue: {
+    type: String,
+    required: true,
+  },
 });
 const emit = defineEmits(["update:modelValue"]);
 
@@ -20,5 +23,6 @@ const formatCurrency = () => {
     :model-value="modelValue"
     @input="(e) => emit('update:modelValue', e.target.value)"
     @blur="formatCurrency"
+    required
   />
 </template>

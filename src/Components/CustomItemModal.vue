@@ -10,6 +10,7 @@ const price = ref("");
 const qty = ref();
 
 const rules = [(v) => !!v || "Required"];
+const positiveNumberRule = [(v) => v >= 0 || "Please enter a positive number."];
 
 const closeDialog = () => {
   emit("update:dialog", false);
@@ -18,8 +19,8 @@ const closeDialog = () => {
   qty.value = 0;
 };
 
-const onSubmit = () => {
-  if (price.value && qty.value && itemName.value) {
+const onSubmit = async () => {
+  if (Number(price.value) > 0 && Number(qty.value) > 0 && itemName.value) {
     // convert into numbers
     const itemObj = {
       itemId: uuidv4(),
@@ -37,15 +38,16 @@ const onSubmit = () => {
   <v-dialog v-model="props.dialog" persistent max-width="700">
     <v-card width="100%">
       <v-toolbar>
-        <v-btn icon="mdi-close" @click="closeDialog"> </v-btn>
+        <v-btn icon="mdi-close" @click="closeDialog"></v-btn>
         <v-toolbar-title>Custom Item</v-toolbar-title>
       </v-toolbar>
 
       <v-container fluid>
         <v-form @submit.prevent="onSubmit">
           <v-row>
-            <v-col cols="12" sm="6"
-              ><v-text-field
+            <v-col cols="12" sm="6">
+              <v-text-field
+                required
                 v-model="itemName"
                 color="primary"
                 label="Item name"
@@ -55,24 +57,27 @@ const onSubmit = () => {
             <v-col cols="12" sm="6">
               <CurrencyField
                 v-model:modelValue="price"
-                :rules="rules"
+                :rules="positiveNumberRule.concat(rules)"
                 label="Price per unit"
               />
             </v-col>
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="qty"
+                min="0"
+                step="1"
+                required
                 placeholder="0"
                 color="primary"
                 label="Quantity"
                 type="number"
-                :rules="rules"
+                :rules="positiveNumberRule.concat(rules)"
               />
             </v-col>
-            <v-col cols="12" style="padding: 0"></v-col>
-            <v-col cols="12" md="6" style="padding: 0"></v-col>
             <v-col cols="12" md="6">
-              <v-btn color="primary" type="submit" block>Submit</v-btn>
+              <v-btn color="primary" class="mt-5" type="submit" block
+                >Submit</v-btn
+              >
             </v-col>
           </v-row>
         </v-form>

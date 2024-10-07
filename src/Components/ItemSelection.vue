@@ -44,12 +44,15 @@ const displayItems = computed(() => {
     }
   }
 });
+const addCustomItem = (item, count) => {
+  emit("addCustomItem", item, count);
+};
 </script>
 
 <template>
   <CustomItemModal
     v-model:dialog="customItemDialog"
-    @addCustomItem="(item, count) => emit('addCustomItem', item, count)"
+    @addCustomItem="addCustomItem"
   />
 
   <v-col cols="7" md="5" lg="6" style="padding: 0px; height: 100%">
