@@ -15,7 +15,7 @@ const inventoryStore = useInventoryListStore();
 const currentCategory = ref("All");
 const selectedItem = ref({});
 const displayItemForm = ref(false);
-// const displayCategoryForm
+const displayCategoryForm = ref(false);
 
 const changePageLayout = computed(() => width.value < 960);
 const editLabel = computed(() => selectedItem.value?.name);
@@ -30,6 +30,7 @@ const handleItemSelection = (item) => {
   );
 
   displayItemForm.value = true;
+  displayCategoryForm.value = false;
 
   selectedItem.value = {
     name: item?.itemName || "",
@@ -65,9 +66,9 @@ const handleItemSelection = (item) => {
       <v-container fluid class="pb-1 px-2 fullHeight">
         <v-sheet height="100%" elevation="4" rounded class="yHeight">
           <EditItemForm
+            v-model:displayForm="displayItemForm"
             :categoryList="categoryList"
             :selectedItem="selectedItem"
-            v-model:displayForm="displayItemForm"
             @handleSubmit="inventoryStore.addItem"
             @handleDelete="inventoryStore.deleteItem"
           />
