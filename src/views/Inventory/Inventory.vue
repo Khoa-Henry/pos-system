@@ -1,7 +1,7 @@
 <script setup>
 import CurrencyField from "@/Components/CurrencyField.vue";
 import PageLayout from "@/Components/PageLayout.vue";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
 import CategorySelection from "../../Components/CategorySelection.vue";
 import ItemSelection from "../../Components/ItemSelection.vue";
@@ -66,9 +66,6 @@ const onDeleteItem = () => {
   // TODO: new a confirm modal or something here
   addOrDeleteItem(false);
 };
-watch(() => {
-  console.log(price);
-});
 </script>
 
 <template>
