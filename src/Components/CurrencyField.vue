@@ -21,7 +21,12 @@ const formatCurrency = () => {
     placeholder="0.00"
     type="number"
     :model-value="modelValue"
-    @input="(e) => emit('update:modelValue', e.target.value)"
+    @input="
+      (e) => {
+        // only accept numbers and no special character expect for. vuetify number only doesnt work on other browser beside chrome
+        emit('update:modelValue', e.target.value);
+      }
+    "
     @blur="formatCurrency"
     required
   />

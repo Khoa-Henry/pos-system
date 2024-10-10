@@ -27,7 +27,7 @@ const onSubmit = async () => {
       itemName: itemName.value,
       pricePerUnit: Number(price.value),
     };
-    emit("addCustomItem", itemObj, Number(qty.value));
+    await emit("addCustomItem", itemObj, Number(qty.value));
 
     closeDialog();
   }
