@@ -16,17 +16,9 @@ const emit = defineEmits(["update:currentCategory"]);
 // Method to emit updated value
 const onCategorySelection = (categoryName) => {
   emit("update:currentCategory", categoryName); // Emit the new value
-
-  if (isEditing) {
-    // display item on the side or modal when in mobile
-
-    if (currentCategory !== "All") {
-      // display editing
-    } else {
-      // do nothing
-    }
-  }
 };
+
+// const iff = (condition, then, otherwise) => (condition ? then : otherwise);
 </script>
 
 <template>

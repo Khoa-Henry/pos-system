@@ -44,6 +44,7 @@ const displayItems = computed(() => {
     }
   }
 });
+
 const addCustomItem = (item, count) => {
   emit("addCustomItem", item, count);
 };
