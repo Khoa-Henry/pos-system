@@ -1,33 +1,36 @@
 <script setup>
 import { useRouter } from "vue-router";
 
-const router = useRouter();
-const { displayIcon = false } = defineProps({
-  displayIcon: { type: Boolean },
+// Props declaration
+const props = defineProps({
+  displayIcon: { type: Boolean, default: false },
 });
 
-const navigateHome = () => {
-  router.push("/");
-};
+// Router setup
+const router = useRouter();
 </script>
 
 <template>
-  <v-container class="container px-2" fluid>
-    <div class="yHeight">
-      <v-row no-gutters class="containerRow">
-        <v-col class="pt-1">
+  <v-container class="fullHeightContainer px-2" fluid>
+    <div class="contentWrapper">
+      <!-- Top Row with Back Button and Optional Icon -->
+      <v-row no-gutters class="headerRow">
+        <!-- Back Button -->
+        <v-col>
           <v-btn @click="router.push('/')" color="primary" variant="text" icon>
-            <v-icon icon="mdi-chevron-left" class="icon"></v-icon>
+            <v-icon class="iconSize">mdi-chevron-left</v-icon>
           </v-btn>
         </v-col>
-        <v-spacer></v-spacer>
-        <v-col cols="auto" class="pt-1 pr-4" v-if="displayIcon">
+        <v-spacer />
+
+        <!-- Optional Icon Slot -->
+        <v-col cols="auto" class="pr-4" v-if="props.displayIcon">
           <slot name="iconHeader"></slot>
         </v-col>
       </v-row>
 
-      <v-row no-gutters class="sectionCol">
-        <!-- Children -->
+      <!-- Main Content -->
+      <v-row no-gutters class="sectionRow">
         <slot></slot>
       </v-row>
     </div>
@@ -35,23 +38,27 @@ const navigateHome = () => {
 </template>
 
 <style scoped>
-.container {
+.fullHeightContainer {
   height: 100vh;
 }
-.yHeight {
+
+.contentWrapper {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
-.containerRow {
+
+.headerRow {
   margin: 0;
   flex: 0 0 auto;
 }
-.sectionCol {
+
+.sectionRow {
   height: 100%;
   overflow: auto;
 }
-.icon {
+
+.iconSize {
   font-size: 3rem;
 }
 </style>

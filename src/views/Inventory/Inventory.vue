@@ -1,7 +1,7 @@
 <script setup>
 import CurrencyField from "@/Components/CurrencyField.vue";
 import PageLayout from "@/Components/PageLayout.vue";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useDisplay } from "vuetify";
 import CategorySelection from "../../Components/CategorySelection.vue";
 import ItemSelection from "../../Components/ItemSelection.vue";
@@ -66,14 +66,15 @@ const onDeleteItem = () => {
   // TODO: new a confirm modal or something here
   addOrDeleteItem(false);
 };
+watch(() => {
+  console.log(price);
+});
 </script>
 
 <template>
   <PageLayout :displayIcon="changePageLayout">
     <template #iconHeader>
-      <v-col cols="auto" class="pt-1 pr-4" v-if="changePageLayout">
-        <v-btn height="48">Edit: {{ name }}</v-btn>
-      </v-col>
+      <v-btn height="48" v-if="changePageLayout">Edit: {{ name }}</v-btn>
     </template>
 
     <CategorySelection

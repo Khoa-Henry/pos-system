@@ -2,7 +2,9 @@
 import CheckoutList from "@/Components/CheckoutList.vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 
-const props = defineProps(["dialog"]);
+const props = defineProps({
+  dialog: { type: Boolean, required: true },
+});
 const emit = defineEmits(["update:dialog", "update:paymentDialog"]);
 const selectedItemsStore = useSelectedItemsStore();
 
@@ -17,9 +19,8 @@ const onPayment = () => {
     v-model="props.dialog"
     transition="dialog-bottom-transition"
     fullscreen
-    style="height: 100%"
   >
-    <v-card style="height: 100%">
+    <v-card class="full-height">
       <v-toolbar>
         <v-btn icon="mdi-close" @click="emit('update:dialog', false)" />
 
@@ -28,10 +29,10 @@ const onPayment = () => {
         >
       </v-toolbar>
 
-      <v-container fluid class="pb-0" style="overflow: auto; height: 100%">
+      <v-container fluid class="pb-0 full-height overflow-scroll">
         <CheckoutList
           :list="selectedItemsStore.items"
-          @onItemRemove="selectedItemsStore.deleteSelectedItem(item)"
+          @onItemRemove="selectedItemsStore.deleteSelectedItem"
         />
       </v-container>
 
@@ -59,3 +60,13 @@ const onPayment = () => {
     </v-card>
   </v-dialog>
 </template>
+
+<style scoped>
+.full-height {
+  height: 100%;
+}
+
+.overflow-scroll {
+  overflow: auto;
+}
+</style>

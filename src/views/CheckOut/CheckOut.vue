@@ -22,25 +22,34 @@ const changePageLayout = computed(() => {
 const inventoryStore = useInventoryListStore();
 const selectedItemsStore = useSelectedItemsStore();
 
+// Update item quantity in the inventory
 const updateItemQuantity = (item, adjustment) => {
   const updatedItem = { ...item, quantity: item.quantity + adjustment };
   inventoryStore.updateItem(updatedItem);
 };
 
+// Remove item from the selected items
 const onItemRemove = (item) => {
-  // remove item to list
   selectedItemsStore.deleteSelectedItem(item);
   updateItemQuantity(item.value, 1); // Restore the item's quantity
 };
 
+// Add item to the selected items
 const onItemSelection = (item) => {
-  // add item to list
   selectedItemsStore.addSelectItem(item);
   updateItemQuantity(item, -1); // Decrease the item's quantity
 };
 
+// Open payment dialog
 const onPayment = () => {
   paymentDialog.value = true;
+};
+
+// Open checkout dialog
+const openCheckoutDialog = () => {
+  if (selectedItemsStore.totalItem !== 0) {
+    checkoutDialog.value = true;
+  }
 };
 </script>
 
@@ -52,13 +61,7 @@ const onPayment = () => {
         icon
         color="primary"
         :disabled="selectedItemsStore.totalItem === 0"
-        @click="
-          () => {
-            if (selectedItemsStore.totalItem !== 0) {
-              checkoutDialog = true;
-            }
-          }
-        "
+        @click="openCheckoutDialog"
       >
         <v-badge color="error" :content="selectedItemsStore.totalItem">
           <v-icon icon="mdi-cart" size="x-large"></v-icon>
@@ -98,8 +101,8 @@ const onPayment = () => {
 
           <v-container fluid class="pb-0 px-2 pt-2" style="flex: 0 0 auto">
             <v-row no-gutters>
-              <v-col cols="12 py-2 px-0"
-                >Total:
+              <v-col cols="12 py-2 px-0">
+                Total:
                 {{
                   Math.abs(selectedItemsStore.totalPrice).toLocaleString(
                     "en-US",
@@ -108,8 +111,8 @@ const onPayment = () => {
                       currency: "USD",
                     }
                   )
-                }}</v-col
-              >
+                }}
+              </v-col>
               <v-col cols="12 py-2 px-0">
                 <v-divider class="border-opacity-100"></v-divider>
               </v-col>
@@ -136,14 +139,17 @@ const onPayment = () => {
   height: 100%;
   margin: 0;
 }
+
 .icon {
   font-size: 3rem;
 }
+
 .yHeight {
-  display: flex; /* Use flexbox */
+  display: flex;
   flex-direction: column;
   height: 100%;
 }
+
 .sectionCol {
   height: 100%;
   overflow: auto;

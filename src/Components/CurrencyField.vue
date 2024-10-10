@@ -1,5 +1,5 @@
 <script setup>
-const { modelValue } = defineProps({
+const props = defineProps({
   modelValue: {
     type: String,
     required: true,
@@ -8,9 +8,15 @@ const { modelValue } = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 
 const formatCurrency = () => {
-  if (modelValue) {
-    const parseValue = parseFloat(modelValue);
-    emit("update:modelValue", (Math.round(parseValue * 100) / 100).toFixed(2));
+  if (props.modelValue) {
+    const parseValue = parseFloat(props.modelValue);
+    if (!isNaN(parseValue)) {
+      console.log((Math.round(parseValue * 100) / 100).toFixed(2));
+      emit(
+        "update:modelValue",
+        (Math.round(parseValue * 100) / 100).toFixed(2)
+      );
+    }
   }
 };
 </script>
@@ -20,13 +26,8 @@ const formatCurrency = () => {
     prefix="$"
     placeholder="0.00"
     type="number"
-    :model-value="modelValue"
-    @input="
-      (e) => {
-        // only accept numbers and no special character expect for. vuetify number only doesnt work on other browser beside chrome
-        emit('update:modelValue', e.target.value);
-      }
-    "
+    :model-value="props.modelValue"
+    @input="(e) => emit('update:modelValue', e.target.value)"
     @blur="formatCurrency"
     required
   />

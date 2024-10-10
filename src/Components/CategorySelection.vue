@@ -1,12 +1,10 @@
 <script setup>
-// Define the prop
-const {
-  currentCategory,
-  isEditing = false,
-  categoryList,
-} = defineProps({
+import { computed } from "vue";
+
+// Define the props
+const props = defineProps({
   currentCategory: { type: String, required: true },
-  isEditing: { type: Boolean },
+  isEditing: { type: Boolean, default: false },
   categoryList: { type: Array, required: true },
 });
 
@@ -18,55 +16,45 @@ const onCategorySelection = (categoryName) => {
   emit("update:currentCategory", categoryName); // Emit the new value
 };
 
-// const iff = (condition, then, otherwise) => (condition ? then : otherwise);
+// Computed properties for button styling logic
+const isAllSelected = computed(() => props.currentCategory === "All");
+const getVariant = (categoryName) => {
+  if (props.isEditing) {
+    return props.currentCategory === categoryName ? "elevated" : undefined;
+  }
+  return props.currentCategory === categoryName ? "elevated" : "text";
+};
+const getColor = (categoryName) => {
+  return props.currentCategory === categoryName ? "primary" : undefined;
+};
 </script>
 
 <template>
-  <v-col cols="5" md="3" lg="2" class="sectionCol" style="padding: 0px">
+  <v-col cols="5" md="3" lg="2" class="sectionCol">
     <v-container fluid class="px-2 pb-0">
       <v-row no-gutters>
         <v-col cols="12">
           <v-btn
-            :variant="
-              isEditing
-                ? currentCategory === 'All'
-                  ? undefined
-                  : 'elevated'
-                : currentCategory === 'All'
-                ? 'elevated'
-                : 'text'
-            "
+            :variant="getVariant('All')"
             block
             class="text-none"
-            :color="currentCategory === 'All' ? 'primary' : undefined"
+            :color="isAllSelected ? 'primary' : undefined"
             @click="onCategorySelection('All')"
             height="50"
           >
             <div>See all</div>
           </v-btn>
         </v-col>
-        <v-col cols="12" v-for="category in categoryList" :key="category.id">
+        <v-col
+          cols="12"
+          v-for="category in props.categoryList"
+          :key="category.id"
+        >
           <v-btn
-            :variant="
-              isEditing
-                ? currentCategory === category.categoryName
-                  ? 'elevated'
-                  : undefined
-                : currentCategory === category.categoryName
-                ? 'elevated'
-                : 'text'
-            "
-            :color="
-              isEditing
-                ? currentCategory === category.categoryName
-                  ? 'primary'
-                  : undefined
-                : currentCategory === category.categoryName
-                ? 'primary'
-                : undefined
-            "
+            :variant="getVariant(category.categoryName)"
             block
             class="text-none"
+            :color="getColor(category.categoryName)"
             @click="onCategorySelection(category.categoryName)"
             height="50"
           >
@@ -75,7 +63,7 @@ const onCategorySelection = (categoryName) => {
         </v-col>
         <v-col cols="12">
           <v-btn
-            v-if="isEditing"
+            v-if="props.isEditing"
             block
             class="text-none"
             height="50"

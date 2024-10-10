@@ -53,13 +53,13 @@ export const useInventoryListStore = defineStore("inventoryList", {
         this.value[selectedCategory].items[selectedItem] = {
           ...newItem,
           quantity: Number(newItem.quantity),
-          pricePerUnit: Number(newItem.pricePerUnit),
+          pricePerUnit: Number(newItem.pricePerUnit).toFixed(2),
         };
       } else {
         this.value[selectedCategory].items.push({
           ...newItem,
           quantity: Number(newItem.quantity),
-          pricePerUnit: Number(newItem.pricePerUnit),
+          pricePerUnit: Number(newItem.pricePerUnit).toFixed(2),
         });
       }
     },
