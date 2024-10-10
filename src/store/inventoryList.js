@@ -42,25 +42,43 @@ export const useInventoryListStore = defineStore("inventoryList", {
     },
     addItem(newItem, category) {
       // TODO: add some validation for existing item
-      const selectedCategory = this.value.findIndex(
+
+      const categoryIndex = this.value.findIndex(
         (c) => c.categoryName === category
       );
-      const selectedItem = this.value[selectedCategory].items.findIndex(
-        (i) => i.itemName === newItem.itemName && i.itemId === newItem.itemId
+
+      // Check if the item exists in a different category
+      for (let i = 0; i < this.value.length; i++) {
+        if (i !== categoryIndex) {
+          // Skip the current category
+          const existingItemIndex = this.value[i].items.findIndex(
+            (item) => item.itemId === newItem.itemId
+          );
+
+          if (existingItemIndex !== -1) {
+            // If it exists in a different category, remove it from there
+            this.value[i].items.splice(existingItemIndex, 1);
+            break;
+          }
+        }
+      }
+
+      const existingItemIndex = this.value[categoryIndex].items.findIndex(
+        (i) => i.itemId === newItem.itemId
       );
 
-      if (selectedItem === 0) {
-        this.value[selectedCategory].items[selectedItem] = {
-          ...newItem,
-          quantity: Number(newItem.quantity),
-          pricePerUnit: Number(newItem.pricePerUnit).toFixed(2),
-        };
+      const finalItem = {
+        ...newItem,
+        quantity: Number(newItem.quantity),
+        pricePerUnit: Number(newItem.pricePerUnit).toFixed(2),
+      };
+
+      if (existingItemIndex !== -1) {
+        // Update the existing item with the new item's details
+        this.value[categoryIndex].items[existingItemIndex] = finalItem;
       } else {
-        this.value[selectedCategory].items.push({
-          ...newItem,
-          quantity: Number(newItem.quantity),
-          pricePerUnit: Number(newItem.pricePerUnit).toFixed(2),
-        });
+        // Add the new item to the category
+        this.value[categoryIndex].items.push(finalItem);
       }
     },
     addCategory(category) {},
