@@ -11,7 +11,7 @@ const isMobile = computed(() => width.value < 700);
 
 // Adjust the circle radius based on screen size
 const radius = computed(
-  () => Math.min(width.value, height.value) / (isMobile.value ? 3 : 4)
+  () => Math.min(width.value, height.value) / (isMobile.value ? 3 : 5)
 );
 
 // Define the items with initial positions at (0, 0)
@@ -25,7 +25,7 @@ const items = ref([
 ]);
 
 /**
- * Calculate and set the circular positions for all items.
+ * Calculate and set the initial circular positions for all items.
  */
 const calculatePositions = () => {
   items.value.forEach((item, index) => {
@@ -41,15 +41,18 @@ const calculatePositions = () => {
 // Calculate initial positions on mount
 calculatePositions();
 
-// Recalculate positions when screen size changes
-watch([width, height], calculatePositions);
+// Watch for changes in width and height to recalculate positions
+watch([width, height], () => {
+  // Only recalculate positions if no item is currently being dragged
+  if (draggedItemIndex === null) {
+    calculatePositions(); // Recalculate positions on resize
+  }
+});
 
 let draggedItemIndex = null; // Track the index of the dragged item
 
 /**
  * Handle the start of a drag event.
- * @param {Event} event - The drag event.
- * @param {number} index - The index of the dragged item.
  */
 const onDragStart = (event, index) => {
   draggedItemIndex = index; // Save the index of the dragged item
@@ -57,8 +60,6 @@ const onDragStart = (event, index) => {
 
 /**
  * Handle the drop event to swap item positions.
- * @param {Event} event - The drop event.
- * @param {number} targetIndex - The index of the target item.
  */
 const onDrop = (event, targetIndex) => {
   if (draggedItemIndex !== null && draggedItemIndex !== targetIndex) {
@@ -66,6 +67,7 @@ const onDrop = (event, targetIndex) => {
     const draggedItem = items.value[draggedItemIndex];
     const targetItem = items.value[targetIndex];
 
+    // Swap their positions
     const tempX = draggedItem.x;
     const tempY = draggedItem.y;
     draggedItem.x = targetItem.x;
@@ -73,14 +75,13 @@ const onDrop = (event, targetIndex) => {
     targetItem.x = tempX;
     targetItem.y = tempY;
 
-    // Update the dragged index to null after swap
+    // Reset dragged item index after swap
     draggedItemIndex = null;
   }
 };
 
 /**
  * Allow the drop action by preventing the default behavior.
- * @param {Event} event - The dragover event.
  */
 const allowDrop = (event) => {
   event.preventDefault(); // Enable dropping by preventing default behavior
@@ -102,6 +103,7 @@ const allowDrop = (event) => {
         class="nav-item"
         :style="{
           transform: `translate(${item.x}px, ${item.y}px)`,
+          transition: 'transform 0.3s ease-in-out',
         }"
         draggable="true"
         @dragstart="(event) => onDragStart(event, index)"
@@ -162,7 +164,6 @@ const allowDrop = (event) => {
 
 .nav-item {
   position: absolute;
-  transition: transform 0.3s ease-in-out;
 }
 
 .nav-link {
@@ -176,7 +177,6 @@ ul {
   list-style-type: none;
 }
 </style>
-
 <!-- <script setup>
 import { computed } from "vue";
 import { useRouter } from "vue-router";
