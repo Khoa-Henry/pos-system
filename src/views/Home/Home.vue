@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 
@@ -12,25 +12,47 @@ const isMobile = computed(() => width.value < 700);
 // Set the circle radius based on the screen size
 const radius = computed(() => (isMobile.value ? 120 : 220));
 
-// Define the items to be displayed, with initial positions at (0, 0)
-const items = ref([
+// Check if there are saved positions in localStorage, else set initial positions
+const storedItems = JSON.parse(localStorage.getItem("iconPositions")) || [
   { text: "Setting", href: "/", icon: "mdi-cogs", x: 0, y: 0 },
   { text: "Logout", href: "/", icon: "mdi-logout", x: 0, y: 0 },
   { text: "Inventory", href: "/inventory", icon: "mdi-pencil", x: 0, y: 0 },
   { text: "History", href: "/history", icon: "mdi-history", x: 0, y: 0 },
   { text: "Checkout", href: "/checkout", icon: "mdi-table", x: 0, y: 0 },
   { text: "Reports", href: "/", icon: "mdi-chart-areaspline", x: 0, y: 0 },
-]);
+];
 
-// Calculate the initial circular positions for each item
-items.value.forEach((item, index) => {
-  const angle = (360 / items.value.length) * index; // Angle between items
-  const radians = (angle * Math.PI) / 180; // Convert angle to radians
+const items = ref(storedItems);
 
-  // Compute the (x, y) position based on the circle radius and angle
-  item.x = radius.value * Math.cos(radians);
-  item.y = radius.value * Math.sin(radians);
-});
+/**
+ * Calculate the initial circular positions only if no saved positions exist.
+ */
+const initializePositions = () => {
+  if (!localStorage.getItem("iconPositions")) {
+    items.value.forEach((item, index) => {
+      // Calculate the angle for the current item based on its index.
+      // We divide 360 degrees by the total number of items to ensure equal spacing around the circle.
+      // Example: If there are 6 items, the angle between each would be 360 / 6 = 60 degrees.
+      const angle = (360 / items.value.length) * index;
+
+      // Convert the angle from degrees to radians.
+      // Radians are required for trigonometric functions (cosine and sine) in JavaScript.
+      // Formula: radians = degrees × (π / 180).
+      // This ensures the angle is in the correct unit for accurate calculations.
+      const radians = (angle * Math.PI) / 180;
+
+      // Compute the (x, y) position for each item using the radius and the angle in radians.
+      // - `Math.cos(radians)` gives the horizontal displacement (x-coordinate) from the circle's center.
+      // - `Math.sin(radians)` gives the vertical displacement (y-coordinate) from the circle's center.
+      // Multiplying by the circle's radius scales the position to fit the circle's size.
+      item.x = radius.value * Math.cos(radians); // Horizontal position
+      item.y = radius.value * Math.sin(radians); // Vertical position
+    });
+
+    // Save the calculated positions to localStorage, ensuring the layout persists on page reload.
+    localStorage.setItem("iconPositions", JSON.stringify(items.value));
+  }
+};
 
 let draggedItemIndex = null; // Store the index of the dragged item
 
@@ -60,10 +82,12 @@ const onDrop = (event, targetIndex) => {
 
     items.value[targetIndex].x = tempX;
     items.value[targetIndex].y = tempY;
+
+    // Save the updated positions to localStorage
+    localStorage.setItem("iconPositions", JSON.stringify(items.value));
   }
 
-  // Reset the dragged item index after the swap
-  draggedItemIndex = null;
+  draggedItemIndex = null; // Reset the dragged item index after the swap
 };
 
 /**
@@ -73,6 +97,11 @@ const onDrop = (event, targetIndex) => {
 const allowDrop = (event) => {
   event.preventDefault(); // Enable dropping by preventing default behavior
 };
+
+// Initialize positions when the component is mounted
+onMounted(() => {
+  initializePositions();
+});
 </script>
 
 <template>
@@ -88,9 +117,7 @@ const allowDrop = (event) => {
         v-for="(item, index) in items"
         :key="index"
         class="nav-item"
-        :style="{
-          transform: `translate(${item.x}px, ${item.y}px)`,
-        }"
+        :style="{ transform: `translate(${item.x}px, ${item.y}px)` }"
         draggable="true"
         @dragstart="(event) => onDragStart(event, index)"
         @dragover.prevent
