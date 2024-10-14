@@ -1,14 +1,20 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
-const { width } = useDisplay();
+
+const { width, height } = useDisplay();
 const router = useRouter();
+
 // Determine if the display is mobile-sized
 const isMobile = computed(() => width.value < 700);
-// Set the circle radius based on the screen size
-const radius = computed(() => (isMobile.value ? 120 : 220));
-// Define the items to be displayed, with initial positions at (0, 0)
+
+// Adjust the circle radius based on screen size
+const radius = computed(
+  () => Math.min(width.value, height.value) / (isMobile.value ? 3 : 4)
+);
+
+// Define the items with initial positions at (0, 0)
 const items = ref([
   { text: "Setting", href: "/", icon: "mdi-cogs", x: 0, y: 0 },
   { text: "Logout", href: "/", icon: "mdi-logout", x: 0, y: 0 },
@@ -17,45 +23,64 @@ const items = ref([
   { text: "Checkout", href: "/checkout", icon: "mdi-table", x: 0, y: 0 },
   { text: "Reports", href: "/", icon: "mdi-chart-areaspline", x: 0, y: 0 },
 ]);
-// Calculate the initial circular positions for each item
-items.value.forEach((item, index) => {
-  const angle = (360 / items.value.length) * index; // Angle between items
-  const radians = (angle * Math.PI) / 180; // Convert angle to radians
-  // Compute the (x, y) position based on the circle radius and angle
-  item.x = radius.value * Math.cos(radians);
-  item.y = radius.value * Math.sin(radians);
-});
-let draggedItemIndex = null; // Store the index of the dragged item
+
+/**
+ * Calculate and set the circular positions for all items.
+ */
+const calculatePositions = () => {
+  items.value.forEach((item, index) => {
+    const angle = (360 / items.value.length) * index; // Angle between items
+    const radians = (angle * Math.PI) / 180; // Convert to radians
+
+    // Set x and y coordinates based on radius and angle
+    item.x = radius.value * Math.cos(radians);
+    item.y = radius.value * Math.sin(radians);
+  });
+};
+
+// Calculate initial positions on mount
+calculatePositions();
+
+// Recalculate positions when screen size changes
+watch([width, height], calculatePositions);
+
+let draggedItemIndex = null; // Track the index of the dragged item
+
 /**
  * Handle the start of a drag event.
- * @param {Event} event - The drag event object.
- * @param {number} index - The index of the item being dragged.
+ * @param {Event} event - The drag event.
+ * @param {number} index - The index of the dragged item.
  */
 const onDragStart = (event, index) => {
   draggedItemIndex = index; // Save the index of the dragged item
 };
+
 /**
- * Handle the drop event and swap items if dropped on another.
- * @param {Event} event - The drop event object.
- * @param {number} targetIndex - The index of the item being dropped onto.
+ * Handle the drop event to swap item positions.
+ * @param {Event} event - The drop event.
+ * @param {number} targetIndex - The index of the target item.
  */
 const onDrop = (event, targetIndex) => {
-  // Ensure we're not dropping onto the same item
   if (draggedItemIndex !== null && draggedItemIndex !== targetIndex) {
-    // Swap the positions of the dragged item and the target item
-    const tempX = items.value[draggedItemIndex].x;
-    const tempY = items.value[draggedItemIndex].y;
-    items.value[draggedItemIndex].x = items.value[targetIndex].x;
-    items.value[draggedItemIndex].y = items.value[targetIndex].y;
-    items.value[targetIndex].x = tempX;
-    items.value[targetIndex].y = tempY;
+    // Swap the (x, y) positions of the dragged and target items
+    const draggedItem = items.value[draggedItemIndex];
+    const targetItem = items.value[targetIndex];
+
+    const tempX = draggedItem.x;
+    const tempY = draggedItem.y;
+    draggedItem.x = targetItem.x;
+    draggedItem.y = targetItem.y;
+    targetItem.x = tempX;
+    targetItem.y = tempY;
+
+    // Update the dragged index to null after swap
+    draggedItemIndex = null;
   }
-  // Reset the dragged item index after the swap
-  draggedItemIndex = null;
 };
+
 /**
  * Allow the drop action by preventing the default behavior.
- * @param {Event} event - The dragover event object.
+ * @param {Event} event - The dragover event.
  */
 const allowDrop = (event) => {
   event.preventDefault(); // Enable dropping by preventing default behavior
@@ -64,12 +89,12 @@ const allowDrop = (event) => {
 
 <template>
   <div class="container" @drop="onDrop" @dragover="allowDrop">
-    <!-- Center Title -->
-    <div class="center-text" :style="{ fontSize: isMobile ? '45px' : '60px' }">
+    <!-- Centered Title -->
+    <div class="center-text" :style="{ fontSize: isMobile ? '40px' : '60px' }">
       Circle
     </div>
 
-    <!-- Icons in Circular Layout -->
+    <!-- Circular Layout for Icons -->
     <ul class="nav-list">
       <li
         v-for="(item, index) in items"
@@ -97,7 +122,7 @@ const allowDrop = (event) => {
             :style="{ fontSize: isMobile ? '45px' : '60px' }"
             color="primary"
           ></v-icon>
-          <p :style="{ fontSize: isMobile ? '10px' : '16px' }">
+          <p :style="{ fontSize: isMobile ? '12px' : '16px' }">
             {{ item.text }}
           </p>
         </v-btn>
@@ -115,6 +140,7 @@ const allowDrop = (event) => {
   justify-content: center;
   align-items: center;
 }
+
 .center-text {
   position: absolute;
   top: 50%;
@@ -122,6 +148,7 @@ const allowDrop = (event) => {
   transform: translate(-50%, -50%);
   font-weight: bold;
 }
+
 .nav-list {
   position: absolute;
   top: 0;
@@ -132,20 +159,24 @@ const allowDrop = (event) => {
   justify-content: center;
   align-items: center;
 }
+
 .nav-item {
   position: absolute;
-  transition: transform 0.3s;
+  transition: transform 0.3s ease-in-out;
 }
+
 .nav-link {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
+
 ul {
   list-style-type: none;
 }
 </style>
+
 <!-- <script setup>
 import { computed } from "vue";
 import { useRouter } from "vue-router";
