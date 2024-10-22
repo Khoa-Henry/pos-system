@@ -16,13 +16,14 @@ const radius = computed(
 
 // Define the items with initial positions at (0, 0)
 const items = ref([
-  { text: "Setting", href: "/", icon: "mdi-cogs", x: 0, y: 0 },
-  { text: "Logout", href: "/", icon: "mdi-logout", x: 0, y: 0 },
-  { text: "Inventory", href: "/inventory", icon: "mdi-pencil", x: 0, y: 0 },
-  { text: "History", href: "/history", icon: "mdi-history", x: 0, y: 0 },
-  { text: "Checkout", href: "/checkout", icon: "mdi-table", x: 0, y: 0 },
-  { text: "Reports", href: "/", icon: "mdi-chart-areaspline", x: 0, y: 0 },
+  { label: "Setting", href: "/", icon: "mdi-cogs", x: 0, y: 0 },
+  { label: "Logout", href: "/", icon: "mdi-logout", x: 0, y: 0 },
+  { label: "Inventory", href: "/inventory", icon: "mdi-pencil", x: 0, y: 0 },
+  { label: "History", href: "/history", icon: "mdi-history", x: 0, y: 0 },
+  { label: "Checkout", href: "/checkout", icon: "mdi-table", x: 0, y: 0 },
+  { label: "Reports", href: "/", icon: "mdi-chart-areaspline", x: 0, y: 0 },
 ]);
+const draggedItemIndex = ref(null); // Track the index of the dragged item
 
 /**
  * Calculate and set the initial circular positions for all items.
@@ -44,27 +45,28 @@ calculatePositions();
 // Watch for changes in width and height to recalculate positions
 watch([width, height], () => {
   // Only recalculate positions if no item is currently being dragged
-  if (draggedItemIndex === null) {
+  if (draggedItemIndex.value === null) {
     calculatePositions(); // Recalculate positions on resize
   }
 });
-
-let draggedItemIndex = null; // Track the index of the dragged item
 
 /**
  * Handle the start of a drag event.
  */
 const onDragStart = (event, index) => {
-  draggedItemIndex = index; // Save the index of the dragged item
+  draggedItemIndex.value = index; // Save the index of the dragged item
 };
 
 /**
  * Handle the drop event to swap item positions.
  */
 const onDrop = (event, targetIndex) => {
-  if (draggedItemIndex !== null && draggedItemIndex !== targetIndex) {
+  if (
+    draggedItemIndex.value !== null &&
+    draggedItemIndex.value !== targetIndex
+  ) {
     // Swap the (x, y) positions of the dragged and target items
-    const draggedItem = items.value[draggedItemIndex];
+    const draggedItem = items.value[draggedItemIndex.value];
     const targetItem = items.value[targetIndex];
 
     // Swap their positions
@@ -76,7 +78,7 @@ const onDrop = (event, targetIndex) => {
     targetItem.y = tempY;
 
     // Reset dragged item index after swap
-    draggedItemIndex = null;
+    draggedItemIndex.value = null;
   }
 };
 
@@ -125,7 +127,7 @@ const allowDrop = (event) => {
             color="primary"
           ></v-icon>
           <p :style="{ fontSize: isMobile ? '12px' : '16px' }">
-            {{ item.text }}
+            {{ item.label }}
           </p>
         </v-btn>
       </li>
