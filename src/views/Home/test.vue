@@ -62,7 +62,6 @@ const items = [
           }deg) translate(${translateValue})`,
         }"
       >
-        {{ index }}
         <v-btn
           icon
           stacked
@@ -72,17 +71,23 @@ const items = [
           size="large"
           @click="router.push(item.href)"
           :style="{
-            transform: `rotate(-${(360 / items.length) * index}deg)`,
+            transform: `rotate(-${startingPosition}deg)`,
           }"
         >
-          <v-icon
-            :icon="item.icon"
-            :style="{ fontSize: isMobile ? '45px' : '60px' }"
-            color="primary"
-          ></v-icon>
-          <p :style="{ fontSize: isMobile ? '10px' : '16px' }">
-            {{ item.text }}
-          </p>
+          <span
+            :style="{
+              transform: `rotate(-${(360 / items.length) * index}deg)`,
+            }"
+          >
+            <v-icon
+              :icon="item.icon"
+              :style="{ fontSize: isMobile ? '45px' : '60px' }"
+              color="primary"
+            ></v-icon>
+            <p :style="{ fontSize: isMobile ? '10px' : '16px' }">
+              {{ item.text }}
+            </p>
+          </span>
         </v-btn>
       </li>
     </ul>
