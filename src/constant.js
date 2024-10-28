@@ -1,5 +1,5 @@
-import { Category } from "./Models/Category";
-import { CategoryItem } from "./Models/Item";
+import { Category } from "./models/Category";
+import { CategoryItem } from "./models/Item";
 
 // export const inventoryList = [
 //   {

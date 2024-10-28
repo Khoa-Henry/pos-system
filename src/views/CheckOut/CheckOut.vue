@@ -1,11 +1,11 @@
 <script setup>
-import CheckoutList from "@/Components/CheckoutList.vue";
-import PageLayout from "@/Components/PageLayout.vue";
+import CheckoutList from "@/components/CheckoutList.vue";
+import PageLayout from "@/components/PageLayout.vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
-import CategorySelection from "../../Components/CategorySelection.vue";
-import ItemSelection from "../../Components/ItemSelection.vue";
+import CategorySelection from "../../components/CategorySelection.vue";
+import ItemSelection from "../../components/ItemSelection.vue";
 import { useInventoryListStore } from "../../store/inventoryList";
 import MobileCheckoutSection from "./component/MobileCheckoutSection.vue";
 import PaymentSelection from "./component/PaymentSelection.vue";

@@ -1,5 +1,5 @@
 <script setup>
-import CheckoutList from "@/Components/CheckoutList.vue";
+import CheckoutList from "@/components/CheckoutList.vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 
 const props = defineProps({

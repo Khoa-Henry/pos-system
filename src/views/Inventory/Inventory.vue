@@ -1,10 +1,10 @@
 <script setup>
-import EditItemForm from "@/Components/EditItemForm.vue";
-import PageLayout from "@/Components/PageLayout.vue";
+import EditItemForm from "@/components/EditItemForm.vue";
+import PageLayout from "@/components/PageLayout.vue";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
-import CategorySelection from "../../Components/CategorySelection.vue";
-import ItemSelection from "../../Components/ItemSelection.vue";
+import CategorySelection from "../../components/CategorySelection.vue";
+import ItemSelection from "../../components/ItemSelection.vue";
 import { useInventoryListStore } from "../../store/inventoryList";
 
 const generateNewId = () => Math.floor(Math.random() * 90000) + 10000;
