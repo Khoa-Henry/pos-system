@@ -7,44 +7,27 @@ export const useInventoryListStore = defineStore("inventoryList", {
   },
 
   actions: {
-    updateItem(updatedItem) {
-      // Find the category containing the item
-      const category = this.value.find((category) =>
-        category.items.some((item) => item.itemId === updatedItem.itemId)
+    storeUpdateItem(updatedItem) {
+      const category = this.value.find(
+        (cat) => cat.findItemIndexById(updatedItem.itemId) !== -1
       );
-
       if (category) {
-        // Find the index of the item within the category
-        const itemIndex = category.items.findIndex(
-          (item) => item.itemId === updatedItem.itemId
-        );
-
-        if (itemIndex !== -1) {
-          // Update the entire item at the found index
-
-          category.items[itemIndex] = {
-            ...updatedItem,
-            quantity: Number(updatedItem.quantity),
-            pricePerUnit: Number(updatedItem.pricePerUnit),
-          };
-        }
+        category.updateItem(updatedItem);
       }
     },
-    deleteItem(item, category) {
-      const selectedCategory = this.value.findIndex(
-        (c) => c.categoryName === category
-      );
-      const selectedItem = this.value[selectedCategory].items.findIndex(
-        (i) => i.itemName === item.itemName && i.itemId === item.itemId
-      );
 
-      this.value[selectedCategory].items.splice(selectedItem, 1);
+    storeDeleteItem(itemId, categoryName) {
+      const category = this.value.find(
+        (cat) => cat.categoryName === categoryName
+      );
+      if (category) {
+        category.deleteItem(itemId);
+      }
     },
-    addItem(newItem, category) {
-      // TODO: add some validation for existing item
 
+    storeAddItem(newItem, categoryName) {
       const categoryIndex = this.value.findIndex(
-        (c) => c.categoryName === category
+        (cat) => cat.categoryName === categoryName
       );
 
       // Check if the item exists in a different category
@@ -63,26 +46,21 @@ export const useInventoryListStore = defineStore("inventoryList", {
         }
       }
 
-      const existingItemIndex = this.value[categoryIndex].items.findIndex(
-        (i) => i.itemId === newItem.itemId
+      this.value[categoryIndex].addItem(newItem);
+    },
+
+    storeAddCategory(categoryName) {
+      const newCategory = new Category(categoryName, generateUniqueId());
+      this.value.push(newCategory);
+    },
+
+    storeDeleteCategory(categoryName) {
+      const index = this.value.findIndex(
+        (cat) => cat.categoryName === categoryName
       );
-
-      const finalItem = {
-        ...newItem,
-        quantity: Number(newItem.quantity),
-        pricePerUnit: Number(newItem.pricePerUnit).toFixed(2),
-      };
-
-      if (existingItemIndex !== -1) {
-        // Update the existing item with the new item's details
-        this.value[categoryIndex].items[existingItemIndex] = finalItem;
-      } else {
-        // Add the new item to the category
-        this.value[categoryIndex].items.push(finalItem);
+      if (index !== -1) {
+        this.value.splice(index, 1);
       }
     },
-    addCategory(category) {},
-    editCategory(category) {},
-    deleteCategory(category) {},
   },
 });

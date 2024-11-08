@@ -40,6 +40,7 @@ const router = useRouter();
 <style scoped>
 .fullHeightContainer {
   height: 100vh;
+  overflow: hidden;
 }
 
 .contentWrapper {

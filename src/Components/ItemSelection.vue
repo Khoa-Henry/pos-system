@@ -133,7 +133,7 @@ const addCustomItem = (item, count) => {
                         QTY: {{ item.quantity }}
                       </v-col>
                       <v-col cols="6" style="text-align: right">
-                        ${{ item.pricePerUnit }}
+                        ${{ item.formatPrice() }}
                       </v-col>
                     </v-row>
                   </v-container>

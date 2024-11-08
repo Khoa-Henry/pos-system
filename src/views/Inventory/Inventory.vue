@@ -1,10 +1,10 @@
 <script setup>
-import EditItemForm from "@/components/EditItemForm.vue";
-import PageLayout from "@/components/PageLayout.vue";
+import PageLayout from "@/Components/PageLayout.vue";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
-import CategorySelection from "../../components/CategorySelection.vue";
-import ItemSelection from "../../components/ItemSelection.vue";
+import CategorySelection from "../../Components/CategorySelection.vue";
+import EditItemForm from "../../Components/EditItemForm.vue";
+import ItemSelection from "../../Components/ItemSelection.vue";
 import { useInventoryListStore } from "../../store/inventoryList";
 
 const generateNewId = () => Math.floor(Math.random() * 90000) + 10000;
@@ -45,9 +45,9 @@ const handleItemSelection = (item) => {
 <template>
   <PageLayout :displayIcon="changePageLayout">
     <template #iconHeader>
-      <v-btn height="48" v-if="changePageLayout" :disabled="!editLabel"
-        >Edit: {{ editLabel }}</v-btn
-      >
+      <v-btn height="48" v-if="changePageLayout" :disabled="!editLabel">
+        Edit: {{ editLabel }}
+      </v-btn>
     </template>
 
     <CategorySelection
@@ -69,8 +69,8 @@ const handleItemSelection = (item) => {
             v-model:displayForm="displayItemForm"
             :categoryList="categoryList"
             :selectedItem="selectedItem"
-            @handleSubmit="inventoryStore.addItem"
-            @handleDelete="inventoryStore.deleteItem"
+            @handleSubmit="inventoryStore.storeAddItem"
+            @handleDelete="inventoryStore.storeDeleteItem"
           />
         </v-sheet>
       </v-container>

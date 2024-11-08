@@ -1,5 +1,5 @@
 <script setup>
-import PageLayout from "@/components/PageLayout.vue";
+import PageLayout from "@/Components/PageLayout.vue";
 </script>
 
 <template>

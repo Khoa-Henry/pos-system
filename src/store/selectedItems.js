@@ -1,71 +1,80 @@
 import { defineStore } from "pinia";
+import { CartItem } from "../Models/CartItem";
 
 export const useSelectedItemsStore = defineStore("selectedItems", {
-  state: () => {
-    return { items: [], totalPrice: 0.0, totalItem: 0 };
-  },
+  state: () => ({
+    items: [],
+    totalPrice: 0.0,
+    totalItem: 0,
+  }),
 
   actions: {
-    addCustomItem(cItem, count) {
-      const existingItem = this.items.find(
-        (existing) =>
-          existing.value.itemName === cItem.itemName &&
-          existing.value.itemId === cItem.itemId
+    storeAddCustomItem(customItem, count) {
+      console.log("here");
+      const existingCartItem = this.items.find(
+        (item) =>
+          item.value.itemName === customItem.itemName &&
+          item.value.itemId === customItem.itemId
       );
 
-      if (existingItem) {
-        existingItem.count += count;
+      if (existingCartItem) {
+        // If item already exists, increment its count by the specified amount
+        existingCartItem.count += count;
       } else {
-        this.items.push({ value: cItem, count: count });
+        // Add a new CartItem instance to the items array
+        const newCartItem = CartItem(customItem, count);
+        this.items.push(newCartItem);
       }
 
-      this.totalPrice += Math.round(cItem.pricePerUnit * count * 100) / 100;
+      this.totalPrice +=
+        Math.round(customItem.pricePerUnit * count * 100) / 100;
       this.totalItem += count;
     },
 
-    addSelectItem(item) {
-      const updatedItem = { ...item, quantity: item.quantity - 1 };
-      const existingItem = this.items.find(
-        (existing) =>
-          existing.value.itemName === item.itemName &&
-          existing.value.itemId === item.itemId
+    storeAddSelectItem(item) {
+      const existingCartItem = this.items.find(
+        (cartItem) =>
+          cartItem.value.itemName === item.itemName &&
+          cartItem.value.itemId === item.itemId
       );
 
-      if (existingItem) {
-        existingItem.count++;
-        existingItem.value.quantity--;
+      if (existingCartItem) {
+        // Increment the count using the model's method
+        existingCartItem.increment();
       } else {
-        this.items.push({ value: updatedItem, count: 1 });
+        // Create a new CartItem if it doesn't already exist in the cart
+        const newCartItem = CartItem(item);
+        this.items.push(newCartItem);
       }
 
       this.totalPrice += Math.round(item.pricePerUnit * 100) / 100;
       this.totalItem += 1;
     },
 
-    deleteSelectedItem(item) {
-      const updatedItem = {
-        value: { ...item.value, quantity: item.value.quantity + 1 },
-        count: item.count - 1,
-      };
+    storeDeleteSelectedItem(cartItem) {
       const index = this.items.findIndex(
-        (existing) =>
-          existing.value.itemName === item.value.itemName &&
-          existing.value.itemId === item.value.itemId
+        (item) =>
+          item.value.itemName === cartItem.value.itemName &&
+          item.value.itemId === cartItem.value.itemId
       );
 
       if (index !== -1) {
-        this.items[index] = updatedItem;
+        const selectedCartItem = this.items[index];
 
-        if (this.items[index].count === 0) {
+        // Decrement count using the model's method
+        selectedCartItem.decrement();
+
+        // Remove item if count reaches zero
+        if (selectedCartItem.count === 0) {
           this.items.splice(index, 1);
         }
       }
 
-      this.totalPrice -= Math.round(item.value.pricePerUnit * 100) / 100;
+      this.totalPrice -= Math.round(cartItem.value.pricePerUnit * 100) / 100;
       this.totalItem -= 1;
     },
 
-    clearSelectedItems() {
+    storeClearSelectedItems() {
       this.items = [];
       this.totalPrice = 0.0;
       this.totalItem = 0;
