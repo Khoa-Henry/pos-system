@@ -1,5 +1,5 @@
 <script setup>
-import CheckoutList from "@/components/CheckoutList.vue";
+import CheckoutList from "@/Components/CheckoutList.vue";
 import { useSelectedItemsStore } from "@/store/selectedItems";
 
 const props = defineProps({
@@ -32,7 +32,7 @@ const onPayment = () => {
       <v-container fluid class="pb-0 full-height overflow-scroll">
         <CheckoutList
           :list="selectedItemsStore.items"
-          @onItemRemove="selectedItemsStore.deleteSelectedItem"
+          @onItemRemove="selectedItemsStore.storeDeleteSelectedItem"
         />
       </v-container>
 
@@ -51,9 +51,13 @@ const onPayment = () => {
             <v-divider class="border-opacity-100"></v-divider>
           </v-col>
           <v-col cols="12 py-2 text-center">
-            <v-btn color="primary" @click="onPayment"
-              >Continue to payment</v-btn
+            <v-btn
+              color="primary"
+              @click="onPayment"
+              :disabled="selectedItemsStore.totalItem === 0"
             >
+              Continue to payment
+            </v-btn>
           </v-col>
         </v-row>
       </v-container>

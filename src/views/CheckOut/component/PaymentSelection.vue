@@ -14,7 +14,7 @@ const closeDialog = () => {
 // Handle payment method selection
 const onMethodSelection = () => {
   closeDialog();
-  selectedItemsStore.clearSelectedItems(); // Clear selected items after payment
+  selectedItemsStore.storeClearSelectedItems(); // Clear selected items after payment
 };
 </script>
 

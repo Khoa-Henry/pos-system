@@ -1,8 +1,7 @@
 <script setup>
+import { CategoryItem } from "@/Models/Item";
 import { ref, watch } from "vue";
 import CurrencyField from "./CurrencyField.vue";
-
-const generateNewId = () => Math.floor(Math.random() * 90000) + 10000;
 
 // Define props
 const props = defineProps({
@@ -31,42 +30,47 @@ const displayDelete = ref(false);
 const formFields = ref({
   name: "",
   qty: "",
-  id: generateNewId(),
+  id: null,
   price: "",
   category: "",
 });
 
-watch(() => {
-  displayDelete.value = !!props.selectedItem?.name;
+// Watch for changes in selectedItem and update formFields accordingly
+watch(
+  () => props.selectedItem,
+  (newValue) => {
+    displayDelete.value = !!newValue?.name;
+    formFields.value = {
+      name: newValue?.name,
+      qty: newValue?.qty,
+      id: newValue?.id,
+      price: newValue?.price,
+      category: newValue?.category,
+    };
+  },
+  { immediate: true } // Update immediately on component mount
+);
 
-  // keep the ref up to date with what the props is
-  formFields.value = {
-    name: props.selectedItem?.name,
-    qty: props.selectedItem?.qty,
-    id: props.selectedItem?.id,
-    price: props.selectedItem?.price,
-    category: props.selectedItem?.category,
-  };
-});
-
+// Method to handle adding or deleting items
 const addOrDeleteItem = (isAdding) => {
-  const itemObj = {
-    itemId: formFields.value.id,
-    itemName: formFields.value.name,
-    quantity: formFields.value.qty,
-    pricePerUnit: formFields.value.price,
-  };
+  const newItem = new CategoryItem(
+    formFields.value.name,
+    formFields.value.id,
+    formFields.value.qty,
+    formFields.value.price
+  );
 
   if (isAdding) {
-    emit("handleSubmit", itemObj, formFields.value.category);
+    emit("handleSubmit", newItem, formFields.value.category);
   } else {
-    emit("handleDelete", itemObj, formFields.value.category);
+    emit("handleDelete", newItem.itemId, formFields.value.category);
   }
 
-  // close form
+  // Close form
   emit("update:displayForm", false);
 };
 
+// Methods for form submission and deletion
 const onSubmit = () => {
   addOrDeleteItem(true);
 };
@@ -77,7 +81,7 @@ const onDelete = () => {
 </script>
 
 <template>
-  <v-form @submit.prevent="onSubmit" v-if="displayForm" class="yHeight">
+  <v-form @submit.prevent="onSubmit" v-if="props.displayForm" class="yHeight">
     <div class="form-content">
       <v-row no-gutters>
         <v-col cols="12">
@@ -96,6 +100,7 @@ const onDelete = () => {
             color="primary"
             label="Item name"
             v-model="formFields.name"
+            required
           />
         </v-col>
         <v-col cols="12" md="6" class="pa-2">
@@ -110,13 +115,15 @@ const onDelete = () => {
           <v-select
             v-model="formFields.category"
             label="Category"
-            :items="categoryList"
+            :items="props.categoryList"
+            required
           />
         </v-col>
         <v-col cols="12" md="6" class="pa-2">
           <CurrencyField
             v-model:modelValue="formFields.price"
             label="Price per unit"
+            required
           />
         </v-col>
         <v-col cols="12" md="6" class="pa-2">
@@ -125,6 +132,7 @@ const onDelete = () => {
             color="primary"
             label="Quantity"
             type="number"
+            required
           />
         </v-col>
       </v-row>
