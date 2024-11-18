@@ -10,7 +10,6 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
 
   actions: {
     storeAddCustomItem(customItem, count) {
-      console.log("here");
       const existingCartItem = this.items.find(
         (item) =>
           item.value.itemName === customItem.itemName &&

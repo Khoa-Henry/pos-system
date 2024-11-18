@@ -100,7 +100,7 @@ const addCustomItem = (item, count) => {
                   height="67"
                   class="text-none"
                   color="primary"
-                  @click="emit('onItemSelection')"
+                  @click="emit('onItemSelection', undefined, true)"
                 >
                   +
                 </v-btn>
@@ -121,7 +121,7 @@ const addCustomItem = (item, count) => {
                   class="text-none"
                   height="auto"
                   :disabled="!props.isEditing && item.quantity <= 0"
-                  @click="emit('onItemSelection', item)"
+                  @click="emit('onItemSelection', item, true)"
                 >
                   <v-container class="px-0" style="max-width: 352px">
                     <v-row no-gutters>

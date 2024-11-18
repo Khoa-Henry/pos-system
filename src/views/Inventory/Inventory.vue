@@ -1,4 +1,5 @@
 <script setup>
+import EditCategoryForm from "@/Components/EditCategoryForm.vue";
 import PageLayout from "@/Components/PageLayout.vue";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
@@ -20,32 +21,51 @@ const displayCategoryForm = ref(false);
 const changePageLayout = computed(() => width.value < 960);
 const editLabel = computed(() => selectedItem.value?.name);
 
-const categoryList = inventoryStore.value.map((cat) => cat.categoryName);
+const categoryList = computed(() =>
+  inventoryStore.value.map((cat) => cat.categoryName)
+);
 
-const handleItemSelection = (item) => {
-  const foundCategory = inventoryStore.value.find((cat) =>
-    cat.items.some(
-      (i) => i.itemName === item?.itemName && i.itemId === item?.itemId
-    )
-  );
+const handleSelection = (item, isItem) => {
+  // check for the type that is being pass in either item or category
+  if (isItem) {
+    const foundCategory = inventoryStore.value.find((cat) =>
+      cat.items.some(
+        (i) => i.itemName === item?.itemName && i.itemId === item?.itemId
+      )
+    );
 
-  displayItemForm.value = true;
-  displayCategoryForm.value = false;
+    displayItemForm.value = true;
+    displayCategoryForm.value = false;
 
-  selectedItem.value = {
-    name: item?.itemName || "",
-    qty: (item?.quantity === 0 ? "0" : item?.quantity) || "",
-    id: item?.itemId || generateNewId(),
-    price: item?.pricePerUnit?.toString() || "",
-    category: foundCategory?.categoryName || "",
-  };
+    selectedItem.value = {
+      name: item?.itemName || "",
+      qty: (item?.quantity === 0 ? "0" : item?.quantity) || "",
+      id: item?.itemId || generateNewId(),
+      price: item?.pricePerUnit?.toString() || "",
+      category: foundCategory?.categoryName || "",
+    };
+  } else {
+    displayItemForm.value = false;
+    displayCategoryForm.value = true;
+
+    selectedItem.value = {
+      name: item?.categoryName || "",
+      id: item?.categoryId || generateNewId(),
+      items: item?.items || [],
+    };
+  }
 };
 </script>
 
 <template>
   <PageLayout :displayIcon="changePageLayout">
     <template #iconHeader>
-      <v-btn height="48" v-if="changePageLayout" :disabled="!editLabel">
+      <v-btn
+        height="48"
+        v-if="changePageLayout"
+        :disabled="!editLabel"
+        @click="() => {}"
+      >
         Edit: {{ editLabel }}
       </v-btn>
     </template>
@@ -54,12 +74,13 @@ const handleItemSelection = (item) => {
       v-model:currentCategory="currentCategory"
       :categoryList="inventoryStore.value"
       :isEditing="true"
+      @onCategorySelection="handleSelection"
     />
     <ItemSelection
       v-model:currentCategory="currentCategory"
       :inventoryStore="inventoryStore.value"
       :isEditing="true"
-      @onItemSelection="handleItemSelection"
+      @onItemSelection="handleSelection"
     />
 
     <v-col md="4" cols="12" v-if="!changePageLayout" class="fullHeight">
@@ -71,6 +92,13 @@ const handleItemSelection = (item) => {
             :selectedItem="selectedItem"
             @handleSubmit="inventoryStore.storeAddItem"
             @handleDelete="inventoryStore.storeDeleteItem"
+          />
+          <EditCategoryForm
+            v-model:displayForm="displayCategoryForm"
+            :selectedCategory="selectedItem"
+            @handleSubmit="inventoryStore.storeAddCategory"
+            @handleDelete="inventoryStore.storeDeleteCategory"
+            v-model:currentCategory="currentCategory"
           />
         </v-sheet>
       </v-container>

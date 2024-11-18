@@ -49,14 +49,26 @@ export const useInventoryListStore = defineStore("inventoryList", {
       this.value[categoryIndex].addItem(newItem);
     },
 
-    storeAddCategory(categoryName) {
-      const newCategory = new Category(categoryName, generateUniqueId());
-      this.value.push(newCategory);
+    storeAddCategory(newCategory) {
+      const categoryIndex = this.value.findIndex(
+        (cat) => cat.categoryId === newCategory.categoryId
+      );
+
+      // if category doesn't exist add it
+      if (categoryIndex === -1) {
+        this.value.push(newCategory);
+      } else {
+        this.value[categoryIndex].categoryName = newCategory.categoryName;
+      }
     },
 
-    storeDeleteCategory(categoryName) {
+    storeUpdateCategory(newCategory) {
+      // const update
+    },
+
+    storeDeleteCategory(newCategory) {
       const index = this.value.findIndex(
-        (cat) => cat.categoryName === categoryName
+        (cat) => cat.categoryName === newCategory.categoryName
       );
       if (index !== -1) {
         this.value.splice(index, 1);

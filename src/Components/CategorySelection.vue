@@ -9,11 +9,14 @@ const props = defineProps({
 });
 
 // Define emits to notify parent of updates
-const emit = defineEmits(["update:currentCategory"]);
+const emit = defineEmits(["update:currentCategory", "onCategorySelection"]);
 
 // Method to emit updated value
-const onCategorySelection = (categoryName) => {
-  emit("update:currentCategory", categoryName); // Emit the new value
+const onSelection = (category) => {
+  emit("update:currentCategory", category.categoryName); // Emit the new value
+  if (category.categoryName !== "All") {
+    emit("onCategorySelection", category, false);
+  }
 };
 
 // Computed properties for button styling logic
@@ -39,7 +42,7 @@ const getColor = (categoryName) => {
             block
             class="text-none"
             :color="isAllSelected ? 'primary' : undefined"
-            @click="onCategorySelection('All')"
+            @click="onSelection({ categoryName: 'All' })"
             height="50"
           >
             <div>See all</div>
@@ -55,7 +58,7 @@ const getColor = (categoryName) => {
             block
             class="text-none"
             :color="getColor(category.categoryName)"
-            @click="onCategorySelection(category.categoryName)"
+            @click="onSelection(category)"
             height="50"
           >
             {{ category.categoryName }}
@@ -69,6 +72,7 @@ const getColor = (categoryName) => {
             height="50"
             variant="tonal"
             color="primary"
+            @click="emit('onCategorySelection', undefined, false)"
           >
             <div>+</div>
           </v-btn>
