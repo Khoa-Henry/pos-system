@@ -1,7 +1,5 @@
 <script setup></script>
 
-<template>
-  <h1>modal</h1>
-</template>
+<template></template>
 
 <style scoped></style>

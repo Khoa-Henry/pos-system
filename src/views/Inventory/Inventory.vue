@@ -1,5 +1,6 @@
 <script setup>
 import EditCategoryForm from "@/Components/EditCategoryForm.vue";
+import MobileAddEdit from "@/components/MobileAddEdit.vue";
 import PageLayout from "@/Components/PageLayout.vue";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
@@ -17,6 +18,7 @@ const currentCategory = ref("All");
 const selectedItem = ref({});
 const displayItemForm = ref(false);
 const displayCategoryForm = ref(false);
+const displayMobileForm = ref(false);
 
 const changePageLayout = computed(() => width.value < 960);
 const editLabel = computed(() => selectedItem.value?.name);
@@ -64,11 +66,17 @@ const handleSelection = (item, isItem) => {
         height="48"
         v-if="changePageLayout"
         :disabled="!editLabel"
-        @click="() => {}"
+        @click="
+          () => {
+            displayMobileForm = true;
+          }
+        "
       >
         Edit: {{ editLabel }}
       </v-btn>
     </template>
+
+    <MobileAddEdit v-if="displayMobileForm" />
 
     <CategorySelection
       v-model:currentCategory="currentCategory"
