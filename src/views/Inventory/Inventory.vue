@@ -1,6 +1,5 @@
 <script setup>
 import EditCategoryForm from "@/Components/EditCategoryForm.vue";
-import MobileAddEdit from "@/components/MobileAddEdit.vue";
 import PageLayout from "@/Components/PageLayout.vue";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
@@ -18,7 +17,7 @@ const currentCategory = ref("All");
 const selectedItem = ref({});
 const displayItemForm = ref(false);
 const displayCategoryForm = ref(false);
-const displayMobileForm = ref(false);
+const dialog = ref(false);
 
 const changePageLayout = computed(() => width.value < 960);
 const editLabel = computed(() => selectedItem.value?.name);
@@ -68,7 +67,7 @@ const handleSelection = (item, isItem) => {
         :disabled="!editLabel"
         @click="
           () => {
-            displayMobileForm = true;
+            dialog = true;
           }
         "
       >
@@ -76,7 +75,37 @@ const handleSelection = (item, isItem) => {
       </v-btn>
     </template>
 
-    <MobileAddEdit v-if="displayMobileForm" />
+    <div class="text-center pa-4" v-if="changePageLayout">
+      <v-dialog
+        v-model="dialog"
+        transition="dialog-bottom-transition"
+        fullscreen
+      >
+        <v-card>
+          <v-toolbar>
+            <v-btn icon="mdi-close" @click="dialog = false"></v-btn>
+          </v-toolbar>
+
+          <br />
+          <EditItemForm
+            v-model:displayForm="displayItemForm"
+            :categoryList="categoryList"
+            :selectedItem="selectedItem"
+            @handleSubmit="inventoryStore.storeAddItem"
+            @handleDelete="inventoryStore.storeDeleteItem"
+            :displayX="false"
+          />
+          <EditCategoryForm
+            v-model:displayForm="displayCategoryForm"
+            :selectedCategory="selectedItem"
+            @handleSubmit="inventoryStore.storeAddCategory"
+            @handleDelete="inventoryStore.storeDeleteCategory"
+            v-model:currentCategory="currentCategory"
+            :displayX="false"
+          />
+        </v-card>
+      </v-dialog>
+    </div>
 
     <CategorySelection
       v-model:currentCategory="currentCategory"
