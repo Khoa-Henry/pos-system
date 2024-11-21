@@ -13,6 +13,10 @@ const props = defineProps({
     required: true,
   },
   currentCategory: { type: String, required: true },
+  displayX: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 // Define emits
@@ -72,7 +76,7 @@ const onDelete = () => {
   <v-form @submit.prevent="onSubmit" v-if="props.displayForm" class="yHeight">
     <div class="form-content">
       <v-row no-gutters>
-        <v-col cols="12">
+        <v-col cols="12" v-if="displayX">
           <v-btn
             @click="emit('update:displayForm', false)"
             color="primary"
