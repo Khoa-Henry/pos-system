@@ -27,6 +27,12 @@ const router = createRouter({
       name: "inventory",
       component: () => import("../views/Inventory/Inventory.vue"),
     },
+    // Create a not found page
+    // {
+    //   path: "/:pathMatch(.*)*",
+    //   name: "NotFound",
+    //   component: () => import("../views/NotFound.vue"),
+    // },
   ],
 });
 
