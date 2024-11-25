@@ -17,7 +17,7 @@ const startingPosition = ref(0);
 // Define the items with their properties
 const items = [
   { text: "Setting", href: "/", icon: "mdi-cogs" },
-  { text: "Logout", href: "/", icon: "mdi-logout" },
+  { text: "Logout", href: "/login", icon: "mdi-logout" },
   { text: "Inventory", href: "/inventory", icon: "mdi-pencil" },
   { text: "History", href: "/history", icon: "mdi-history" },
   { text: "Checkout", href: "/checkout", icon: "mdi-table" },

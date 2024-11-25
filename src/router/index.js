@@ -1,9 +1,15 @@
+import Login from "@/views/Login/Login.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home/Home.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: "/login",
+      name: "login",
+      component: Login,
+    },
     {
       path: "/",
       name: "home",
@@ -27,6 +33,11 @@ const router = createRouter({
       name: "inventory",
       component: () => import("../views/Inventory/Inventory.vue"),
     },
+    {
+      path: "/notfound",
+      name: "not found",
+      component: () => import("../views/NotFound/NotFound.vue"),
+    },
     // Create a not found page
     // {
     //   path: "/:pathMatch(.*)*",
@@ -35,5 +46,7 @@ const router = createRouter({
     // },
   ],
 });
+
+// router.beforeEach((to, from, next) => {});
 
 export default router;

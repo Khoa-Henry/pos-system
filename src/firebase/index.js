@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 // Your web app's Firebase configuration
 // Import the functions you need from the SDKs you need
 
@@ -21,7 +22,7 @@ try {
   db = getFirestore(app);
   auth = getAuth(app);
 } catch (error) {
-  // route to page not found
+  router.push("/notfound");
 }
 
 export { auth, authProvider, db };
