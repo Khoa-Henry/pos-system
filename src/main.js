@@ -73,9 +73,18 @@ const vuetify = createVuetify({
   directives,
 });
 
+const app = createApp(App);
 const pinia = createPinia();
 
-const app = createApp(App);
-app.use(vuetify).use(router).use(pinia);
+// pinia.use(({ store }) => {
+//   store.router = markRaw(router);
+// });
 
+app.use(pinia);
+
+// Initialize the auth store
+// const userStore = useUserStore(pinia);
+// userStore.initializeAuth();
+
+app.use(vuetify).use(router);
 app.mount("#app");

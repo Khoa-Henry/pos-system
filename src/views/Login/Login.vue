@@ -31,7 +31,6 @@ const submitPin = () => {
         // find the logged in user in the database and set the user state
         const userDocRef = doc(collection(db, "Users"), auth.currentUser.uid);
         const userDocSnap = await getDoc(userDocRef);
-        console.log(userDocSnap.data());
         userStore.setUser(userDocSnap.data());
         router.push("/");
       })

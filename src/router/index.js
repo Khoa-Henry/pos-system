@@ -1,3 +1,4 @@
+import { useUserStore } from "@/store/user";
 import Login from "@/views/Login/Login.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home/Home.vue";
@@ -38,15 +39,30 @@ const router = createRouter({
       name: "not found",
       component: () => import("../views/NotFound/NotFound.vue"),
     },
-    // Create a not found page
-    // {
-    //   path: "/:pathMatch(.*)*",
-    //   name: "NotFound",
-    //   component: () => import("../views/NotFound.vue"),
-    // },
   ],
 });
 
-// router.beforeEach((to, from, next) => {});
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore();
+
+  await new Promise((resolve, reject) => {
+    const test = setInterval(() => {
+      if (!userStore.isLoading) {
+        resolve();
+        clearInterval(test);
+      }
+    }, 100);
+  });
+
+  if (
+    userStore.isAuth === false &&
+    to.name !== "login" &&
+    to.name !== "not found"
+  ) {
+    next({ name: "login" });
+  } else {
+    next();
+  }
+});
 
 export default router;
