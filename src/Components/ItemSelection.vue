@@ -25,7 +25,7 @@ const ALL_CATEGORY = "All";
 
 // Computed property for display items
 const displayItems = computed(() => {
-  const searchQuery = searchText.value.trim().toLowerCase();
+  const searchQuery = searchText.value?.trim().toLowerCase();
 
   if (searchQuery) {
     emit("update:currentCategory", ALL_CATEGORY); // Emit category reset on search
@@ -80,65 +80,71 @@ const addCustomItem = (item, count) => {
         <v-col cols="12" class="sectionCol">
           <v-container fluid class="noPadding">
             <v-row no-gutters>
-              <!-- Custom Item Button -->
-              <v-col cols="12" md="6" lg="4" class="pa-2">
-                <v-btn
-                  v-if="!props.isEditing"
-                  variant="outlined"
-                  block
-                  height="67"
-                  class="text-none"
-                  color="primary"
-                  @click="customItemDialog = true"
-                >
-                  Custom Item
-                </v-btn>
-                <v-btn
-                  v-if="props.isEditing"
-                  variant="tonal"
-                  block
-                  height="67"
-                  class="text-none"
-                  color="primary"
-                  @click="emit('onItemSelection', undefined, true)"
-                >
-                  +
-                </v-btn>
-              </v-col>
-
               <!-- Item List -->
-              <v-col
-                v-for="item in displayItems"
-                :key="item.itemId"
-                cols="12"
-                md="6"
-                lg="4"
-                class="pa-2"
+              <transition-group
+                name="fade"
+                tag="div"
+                class="items-transition-group"
               >
-                <v-btn
-                  :variant="props.isEditing ? 'tonal' : 'outlined'"
-                  block
-                  class="text-none"
-                  height="auto"
-                  :disabled="!props.isEditing && item.quantity <= 0"
-                  @click="emit('onItemSelection', item, true)"
+                <!-- Custom Item Button -->
+                <v-col cols="12" md="6" lg="4" class="pa-2">
+                  <v-btn
+                    v-if="!props.isEditing"
+                    variant="outlined"
+                    block
+                    height="67"
+                    class="text-none"
+                    color="primary"
+                    @click="customItemDialog = true"
+                  >
+                    Custom Item
+                  </v-btn>
+                  <v-btn
+                    v-if="props.isEditing"
+                    variant="tonal"
+                    block
+                    height="67"
+                    class="text-none"
+                    color="primary"
+                    @click="emit('onItemSelection', undefined, true)"
+                  >
+                    +
+                  </v-btn>
+                </v-col>
+
+                <v-col
+                  v-for="item in displayItems"
+                  :key="item.itemId"
+                  cols="12"
+                  md="6"
+                  lg="4"
+                  class="pa-2"
                 >
-                  <v-container class="px-0" style="max-width: 352px">
-                    <v-row no-gutters>
-                      <v-col cols="12">{{ item.itemName }}</v-col>
-                      <v-col cols="12">
-                        <v-divider class="border-opacity-100"></v-divider>
-                      </v-col>
-                      <v-col cols="6" style="text-align: left">
-                        QTY: {{ item.quantity }}
-                      </v-col>
-                      <v-col cols="6" style="text-align: right">
-                        ${{ item.formatPrice() }}
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-btn>
-              </v-col>
+                  <v-btn
+                    :variant="props.isEditing ? 'tonal' : 'outlined'"
+                    block
+                    class="text-none"
+                    height="auto"
+                    :disabled="!props.isEditing && item.quantity <= 0"
+                    @click="emit('onItemSelection', item, true)"
+                  >
+                    <v-container class="px-0" style="max-width: 352px">
+                      <v-row no-gutters>
+                        <v-col cols="12">{{ item.itemName }}</v-col>
+                        <v-col cols="12">
+                          <v-divider class="border-opacity-100"></v-divider>
+                        </v-col>
+                        <v-col cols="6" style="text-align: left">
+                          QTY: {{ item.quantity }}
+                        </v-col>
+                        <v-col cols="6" style="text-align: right">
+                          ${{ item.formatPrice() }}
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-btn>
+                </v-col>
+              </transition-group>
             </v-row>
           </v-container>
         </v-col>
@@ -165,5 +171,26 @@ const addCustomItem = (item, count) => {
 
 .noPadding {
   padding: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.items-transition-group {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%; /* Ensure it expands to the full width of the container */
 }
 </style>

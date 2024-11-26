@@ -87,7 +87,6 @@ const userStore = useUserStore();
 // Authentication wrapper
 const initializeAuth = () =>
   new Promise((resolve, reject) => {
-    console.log(!(auth && db));
     // Check Firebase configuration
     if (!(auth && db)) {
       reject(new Error("Firebase is not configured."));

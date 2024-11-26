@@ -73,7 +73,8 @@ const deletePin = () => {
                 v-model="pin"
                 readonly
                 outlined
-                :errorMessages="errorMessage"
+                :error-messages="errorMessage"
+                class="large-text-field"
               />
             </v-col>
           </v-row>
@@ -130,13 +131,10 @@ const deletePin = () => {
   </v-container>
 </template>
 
-<style>
-.v-btn {
+<style scoped>
+/* override */
+.large-text-field ::v-deep(input) {
   font-size: 2rem;
-}
-
-.v-text-field input {
-  font-size: 2em;
 }
 
 .fullHeightContainer {
