@@ -44,7 +44,12 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <v-dialog v-model="props.dialog" persistent max-width="700">
+  <v-dialog
+    v-model="props.dialog"
+    persistent
+    max-width="700"
+    transition="dialog-bottom-transition"
+  >
     <v-card width="100%">
       <v-toolbar>
         <v-btn icon="mdi-close" @click="closeDialog"></v-btn>
