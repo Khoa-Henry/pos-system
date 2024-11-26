@@ -1,4 +1,6 @@
 <script setup>
+import { auth } from "@/firebase";
+import { signOut } from "@firebase/auth";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
@@ -69,7 +71,15 @@ const items = [
           color="primary"
           class="nav-link"
           size="large"
-          @click="router.push(item.href)"
+          @click="
+            () => {
+              router.push(item.href);
+              if (item.href === '/login') {
+                // Log user out
+                signOut(auth);
+              }
+            }
+          "
           :style="{
             transform: `rotate(-${startingPosition}deg)`,
           }"
