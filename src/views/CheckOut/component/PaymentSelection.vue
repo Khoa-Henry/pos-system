@@ -13,6 +13,8 @@ const closeDialog = () => {
 
 // Handle payment method selection
 const onMethodSelection = () => {
+  // Creation of the order should be here
+
   closeDialog();
   selectedItemsStore.storeClearSelectedItems(); // Clear selected items after payment
 };
