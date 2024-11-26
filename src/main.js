@@ -13,6 +13,11 @@ import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
 
 //Store
 import { createPinia } from "pinia";
+import { useUserStore } from "./store/user";
+
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, doc, getDoc } from "firebase/firestore";
+import { auth, db } from "./firebase";
 
 // useDisplay is the function to use to  find the current theme of the page aka width
 // https://vuetifyjs.com/en/api/use-display/
@@ -75,16 +80,45 @@ const vuetify = createVuetify({
 
 const app = createApp(App);
 const pinia = createPinia();
+app.use(pinia).use(vuetify);
 
-// pinia.use(({ store }) => {
-//   store.router = markRaw(router);
+const userStore = useUserStore();
+
+// Authentication wrapper
+const initializeAuth = () =>
+  new Promise((resolve, reject) => {
+    console.log(!(auth && db));
+    // Check Firebase configuration
+    if (!(auth && db)) {
+      reject(new Error("Firebase is not configured."));
+      return;
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Fetch user details and set in the store
+        const userDocRef = doc(collection(db, "Users"), auth.currentUser.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          userStore.setUser(userDocSnap.data());
+        }
+      } else {
+        // Clear the user store if no user is logged in
+        userStore.clearUser();
+      }
+      resolve(); // Resolve the promise once authentication is handled
+    });
+  });
+
+// Initialize auth and mount the app
+initializeAuth()
+  .then(() => {
+    app.use(router);
+    app.mount("#app");
+  })
+  .catch((error) => {
+    console.error("Error during initialization:", error);
+  });
+// .finally(() => {
+//   app.mount("#app");
 // });
-
-app.use(pinia);
-
-// Initialize the auth store
-// const userStore = useUserStore(pinia);
-// userStore.initializeAuth();
-
-app.use(vuetify).use(router);
-app.mount("#app");

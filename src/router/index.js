@@ -45,15 +45,6 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
 
-  await new Promise((resolve, reject) => {
-    const test = setInterval(() => {
-      if (!userStore.isLoading) {
-        resolve();
-        clearInterval(test);
-      }
-    }, 100);
-  });
-
   if (
     userStore.isAuth === false &&
     to.name !== "login" &&
