@@ -12,6 +12,7 @@ const generateNewId = () => Math.floor(Math.random() * 90000) + 10000;
 
 const { width } = useDisplay();
 const inventoryStore = useInventoryListStore();
+inventoryStore.fetchInventory();
 
 const currentCategory = ref("All");
 const selectedItem = ref({});

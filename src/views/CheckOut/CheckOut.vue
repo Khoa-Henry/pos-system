@@ -20,6 +20,7 @@ const changePageLayout = computed(() => {
 });
 
 const inventoryStore = useInventoryListStore();
+inventoryStore.fetchInventory();
 const selectedItemsStore = useSelectedItemsStore();
 
 // Remove item from the selected items
