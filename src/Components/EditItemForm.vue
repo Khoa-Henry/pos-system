@@ -120,6 +120,8 @@ const onDelete = () => {
             v-model="formFields.category"
             label="Category"
             :items="props.categoryList"
+            item-title="state"
+            item-value="abbr"
             required
           />
         </v-col>

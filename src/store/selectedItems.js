@@ -43,6 +43,8 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
       } else {
         // Create a new CartItem if it doesn't already exist in the cart
         const newCartItem = CartItem(item);
+        newCartItem.value.quantity--;
+        newCartItem.value.isDirty = true;
         this.items.push(newCartItem);
       }
 
@@ -66,6 +68,7 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
         // Remove item if count reaches zero
         if (selectedCartItem.count === 0) {
           this.items.splice(index, 1);
+          selectedCartItem.value.isDirty = false;
         }
       }
 

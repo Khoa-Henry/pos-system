@@ -1,12 +1,11 @@
-export function CategoryItem(name, id, qty, pPU) {
+export function CategoryItem(name, id, qty, pPU, categoryName, categoryId) {
   this.itemName = name ?? "";
   this.itemId = id || "";
   this.quantity = Number(qty) ?? 0;
   this.pricePerUnit = Number(pPU).toFixed(2) ?? 0;
-
-  this.adjustQuantity = function (adjustment) {
-    this.quantity += adjustment;
-  };
+  this.isDirty = false;
+  this.categoryName = categoryName ?? "";
+  this.categoryId = categoryId ?? "";
 
   this.formatPrice = function () {
     return parseFloat(this.pricePerUnit).toFixed(2);
@@ -18,6 +17,8 @@ export function CategoryItem(name, id, qty, pPU) {
       itemName: this.itemName,
       quantity: this.quantity,
       pricePerUnit: this.pricePerUnit,
+      categoryName: this.categoryName,
+      categoryID: this.categoryID,
     };
   };
 
@@ -29,7 +30,9 @@ export function CategoryItem(name, id, qty, pPU) {
       data.itemName,
       snapshot.id, // Use snapshot.id as itemId (Firestore document ID)
       data.quantity,
-      data.pricePerUnit
+      data.pricePerUnit,
+      data.categoryName,
+      data.categoryID
     );
 
     return item;
@@ -44,7 +47,9 @@ CategoryItem.converter = {
       data.itemName,
       snapshot.id,
       data.quantity,
-      data.pricePerUnit
+      data.pricePerUnit,
+      data.categoryName,
+      data.categoryId
     );
   },
 };

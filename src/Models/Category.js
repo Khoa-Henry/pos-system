@@ -13,21 +13,15 @@ export function Category(name, id, itemList = []) {
           item.itemName,
           item.itemId,
           item.quantity,
-          item.pricePerUnit
+          item.pricePerUnit,
+          this.categoryName,
+          this.categoryId
         )
   );
 
   // Method to find an item's index by its ID
   this.findItemIndexById = function (itemId) {
     return this.items.findIndex((item) => item.itemId === itemId);
-  };
-
-  // Method to update an item in the items list
-  this.updateItem = function (updatedItem) {
-    const index = this.findItemIndexById(updatedItem.itemId);
-    if (index !== -1) {
-      this.items[index] = updatedItem;
-    }
   };
 
   // Method to add a new item or update if it already exists
@@ -60,18 +54,7 @@ export function Category(name, id, itemList = []) {
   this.fromFirestore = function (snapshot, options) {
     const data = snapshot.data(options);
 
-    // create the model
-    const items = data.items.map(
-      (item) =>
-        new CategoryItem(
-          item.itemName,
-          item.itemId,
-          item.quantity,
-          item.pricePerUnit
-        )
-    );
-
-    const category = new Category(data.categoryName, snapshot.id, items);
+    const category = new Category(data.categoryName, snapshot.id);
 
     return category;
   };
@@ -81,6 +64,6 @@ Category.converter = {
   toFirestore: (category) => category.toFirestore(),
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options);
-    return new Category(data.categoryName, snapshot.id, data.items);
+    return new Category(data.categoryName, snapshot.id);
   },
 };
