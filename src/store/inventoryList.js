@@ -13,7 +13,6 @@ export const useInventoryListStore = defineStore("inventoryList", {
     // Fetch all categories and items from Firestore to populate the store
     async fetchInventory() {
       try {
-        this.value = [];
         const store = [];
 
         // Fetch categories
