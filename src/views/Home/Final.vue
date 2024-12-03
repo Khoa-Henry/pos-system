@@ -4,9 +4,11 @@ import { signOut } from "@firebase/auth";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
+import { useInventoryListStore } from "../../store/inventoryList";
 
 const { width } = useDisplay();
 const router = useRouter();
+const inventoryStore = useInventoryListStore();
 
 const translateValue = computed(() => (width.value < 700 ? "120px" : "220px"));
 const isMobile = computed(() => {
@@ -77,6 +79,7 @@ const items = [
               if (item.href === '/login') {
                 // Log user out
                 signOut(auth);
+                inventoryStore.storeClear();
               }
             }
           "

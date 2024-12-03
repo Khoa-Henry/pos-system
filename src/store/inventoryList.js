@@ -111,5 +111,9 @@ export const useInventoryListStore = defineStore("inventoryList", {
         this.value.splice(index, 1);
       }
     },
+
+    storeClear() {
+      this.value = [];
+    },
   },
 });
