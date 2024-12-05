@@ -70,7 +70,6 @@ export const useInventoryListStore = defineStore("inventoryList", {
       );
       newItem.categoryName = this.value[categoryIndex].categoryName;
       newItem.categoryId = this.value[categoryIndex].categoryId;
-      console.log(newItem, "$$", categoryName);
       // Check if the item exists in a different category
       for (let i = 0; i < this.value.length; i++) {
         if (i !== categoryIndex) {

@@ -8,8 +8,6 @@ import EditItemForm from "../../Components/EditItemForm.vue";
 import ItemSelection from "../../Components/ItemSelection.vue";
 import { useInventoryListStore } from "../../store/inventoryList";
 
-const generateNewId = () => Math.floor(Math.random() * 90000) + 10000;
-
 const { width } = useDisplay();
 const inventoryStore = useInventoryListStore();
 
@@ -18,6 +16,7 @@ const selectedItem = ref({});
 const displayItemForm = ref(false);
 const displayCategoryForm = ref(false);
 const dialog = ref(false);
+const validationMessage = ref("");
 
 const changePageLayout = computed(() => width.value < 960);
 const editLabel = computed(() => selectedItem.value?.name);
@@ -41,7 +40,7 @@ const handleSelection = (item, isItem) => {
     selectedItem.value = {
       name: item?.itemName || "",
       qty: (item?.quantity === 0 ? "0" : item?.quantity) || "",
-      id: item?.itemId || generateNewId(),
+      id: item?.itemId || "",
       price: item?.pricePerUnit?.toString() || "",
       category: foundCategory?.categoryName || "",
     };
@@ -51,10 +50,26 @@ const handleSelection = (item, isItem) => {
 
     selectedItem.value = {
       name: item?.categoryName || "",
-      id: item?.categoryId || generateNewId(),
+      id: item?.categoryId || "",
       items: item?.items || [],
     };
   }
+};
+
+const onCategorySubmit = (newCategory) => {
+  const isExistingCategory = inventoryStore.value.some(
+    (category) => category.categoryName === newCategory.categoryName
+  );
+
+  if (!newCategory.categoryId && isExistingCategory) {
+    validationMessage.value = "Existing Category Name";
+    return;
+  }
+
+  inventoryStore.storeAddCategory(newCategory);
+  currentCategory.value = newCategory.categoryName;
+  displayCategoryForm.value = false;
+  validationMessage.value = "";
 };
 </script>
 
@@ -98,10 +113,11 @@ const handleSelection = (item, isItem) => {
           <EditCategoryForm
             v-model:displayForm="displayCategoryForm"
             :selectedCategory="selectedItem"
-            @handleSubmit="inventoryStore.storeAddCategory"
+            @handleSubmit="onCategorySubmit"
             @handleDelete="inventoryStore.storeDeleteCategory"
             v-model:currentCategory="currentCategory"
             :displayX="false"
+            :validationMessage="validationMessage"
           />
         </v-card>
       </v-dialog>
@@ -133,9 +149,10 @@ const handleSelection = (item, isItem) => {
           <EditCategoryForm
             v-model:displayForm="displayCategoryForm"
             :selectedCategory="selectedItem"
-            @handleSubmit="inventoryStore.storeAddCategory"
+            @handleSubmit="onCategorySubmit"
             @handleDelete="inventoryStore.storeDeleteCategory"
             v-model:currentCategory="currentCategory"
+            :validationMessage="validationMessage"
           />
         </v-sheet>
       </v-container>

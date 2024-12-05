@@ -17,6 +17,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  validationMessage: { type: String, default: "" },
 });
 
 // Define emits
@@ -56,10 +57,6 @@ const addOrDeleteCategory = (isAdding) => {
   } else {
     emit("handleDelete", newCategory);
   }
-
-  // Close form
-  emit("update:displayForm", false);
-  emit("update:currentCategory", newCategory.categoryName);
 };
 
 // Methods for form submission and deletion
@@ -93,6 +90,7 @@ const onDelete = () => {
             label="Category name"
             v-model="formFields.name"
             required
+            :error-messages="validationMessage"
           />
         </v-col>
       </v-row>

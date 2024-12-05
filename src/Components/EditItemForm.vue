@@ -108,14 +108,6 @@ const onDelete = () => {
           />
         </v-col>
         <v-col cols="12" md="6" class="pa-2">
-          <v-text-field
-            v-model="formFields.id"
-            readonly
-            color="primary"
-            label="Item ID"
-          />
-        </v-col>
-        <v-col cols="12" md="6" class="pa-2">
           <v-select
             v-model="formFields.category"
             label="Category"
