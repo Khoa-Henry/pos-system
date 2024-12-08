@@ -60,7 +60,7 @@ export function Category(name, id, itemList = []) {
 }
 
 Category.converter = {
-  toFirestore: (category) => category.toFirestore(),
+  toFirestore: (category) => category,
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options);
     return new Category(data.categoryName, snapshot.id);

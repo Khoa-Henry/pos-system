@@ -121,25 +121,46 @@ export const useInventoryListStore = defineStore("inventoryList", {
       }
     },
 
-    storeAddCategory(newCategory) {
-      const categoryIndex = this.value.findIndex(
+    async storeAddCategory(newCategory) {
+      const existingCategoryIndex = this.value.findIndex(
         (cat) => cat.categoryId === newCategory.categoryId
       );
 
-      // if category doesn't exist add it
-      if (categoryIndex === -1) {
-        this.value.push(newCategory);
+      if (existingCategoryIndex === -1) {
+        // If category doesn't exist, add it
+        const categoriesCollectionRef = collection(
+          db,
+          "Categories"
+        ).withConverter(Category.converter);
+        const docRef = await addDoc(
+          categoriesCollectionRef,
+          newCategory.toFirestore()
+        );
+        newCategory.categoryId = docRef.id; // Assign the generated ID from Firestore
       } else {
-        this.value[categoryIndex].categoryName = newCategory.categoryName;
+        // If category exists, update it
+        const categoryDocRef = doc(db, "Categories", newCategory.categoryId);
+        await updateDoc(categoryDocRef, {
+          categoryName: newCategory.categoryName,
+        });
       }
     },
 
-    storeDeleteCategory(newCategory) {
-      const index = this.value.findIndex(
-        (cat) => cat.categoryName === newCategory.categoryName
+    async storeDeleteCategory(newCategory) {
+      const categoryIndex = this.value.findIndex(
+        (cat) => cat.categoryId === newCategory.categoryId
       );
-      if (index !== -1) {
-        this.value.splice(index, 1);
+      if (categoryIndex !== -1) {
+        const category = this.value[categoryIndex];
+        const categoryDocRef = doc(db, "Categories", category.categoryId);
+        await deleteDoc(categoryDocRef);
+
+        // TODO: do we want to delete items in the category??
+        // // Delete all items in this category
+        // for (const item of category.items) {
+        //   const itemDocRef = doc(db, "Items", item.itemId);
+        //   await deleteDoc(itemDocRef);
+        // }
       }
     },
 

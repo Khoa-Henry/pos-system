@@ -57,6 +57,9 @@ const addOrDeleteCategory = (isAdding) => {
   } else {
     emit("handleDelete", newCategory);
   }
+
+  // Close form
+  emit("update:displayForm", false);
 };
 
 // Methods for form submission and deletion
