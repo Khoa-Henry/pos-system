@@ -20,7 +20,6 @@ const validationMessage = ref("");
 
 const changePageLayout = computed(() => width.value < 960);
 const editLabel = computed(() => selectedItem.value?.name);
-
 const categoryList = computed(() =>
   inventoryStore.value.map((cat) => cat.categoryName)
 );
@@ -44,6 +43,8 @@ const handleSelection = (item, isItem) => {
       price: item?.pricePerUnit?.toString() || "",
       category: foundCategory?.categoryName || "",
     };
+
+    dialog.value = selectedItem.value?.name ? false : true;
   } else {
     displayItemForm.value = false;
     displayCategoryForm.value = true;
@@ -53,6 +54,8 @@ const handleSelection = (item, isItem) => {
       id: item?.categoryId || "",
       items: item?.items || [],
     };
+
+    dialog.value = selectedItem.value?.name ? false : true;
   }
 };
 
@@ -68,8 +71,37 @@ const onCategorySubmit = (newCategory) => {
 
   inventoryStore.storeAddCategory(newCategory);
   currentCategory.value = newCategory.categoryName;
-  displayCategoryForm.value = false;
   validationMessage.value = "";
+  dialog.value = false;
+  selectedItem.value = {
+    name: newCategory?.categoryName || "",
+    id: newCategory?.categoryId || "",
+    items: newCategory?.items || [],
+  };
+};
+
+const onCategoryDelete = (newCategory) => {
+  inventoryStore.storeDeleteCategory(newCategory);
+  dialog.value = false;
+  selectedItem.value = {};
+};
+
+const onItemDelete = (itemId, categoryName) => {
+  inventoryStore.storeDeleteItem(itemId, categoryName);
+  dialog.value = false;
+  selectedItem.value = {};
+};
+
+const onItemSubmit = (newItem, categoryName) => {
+  inventoryStore.storeAddItem(newItem, categoryName);
+  dialog.value = false;
+  selectedItem.value = {
+    name: newItem?.itemName || "",
+    qty: (newItem?.quantity === 0 ? "0" : newItem?.quantity) || "",
+    id: newItem?.itemId || "",
+    price: newItem?.pricePerUnit?.toString() || "",
+    category: categoryName || "",
+  };
 };
 </script>
 
@@ -83,6 +115,15 @@ const onCategorySubmit = (newCategory) => {
         @click="
           () => {
             dialog = true;
+
+            // display the type of form
+            if (selectedItem?.price) {
+              displayItemForm = true;
+              displayCategoryForm = false;
+            } else {
+              displayItemForm = false;
+              displayCategoryForm = true;
+            }
           }
         "
       >
@@ -90,7 +131,7 @@ const onCategorySubmit = (newCategory) => {
       </v-btn>
     </template>
 
-    <div class="text-center pa-4" v-if="changePageLayout">
+    <div v-if="changePageLayout">
       <v-dialog
         v-model="dialog"
         transition="dialog-bottom-transition"
@@ -106,15 +147,15 @@ const onCategorySubmit = (newCategory) => {
             v-model:displayForm="displayItemForm"
             :categoryList="categoryList"
             :selectedItem="selectedItem"
-            @handleSubmit="inventoryStore.storeAddItem"
-            @handleDelete="inventoryStore.storeDeleteItem"
+            @handleSubmit="onItemSubmit"
+            @handleDelete="onItemDelete"
             :displayX="false"
           />
           <EditCategoryForm
             v-model:displayForm="displayCategoryForm"
             :selectedCategory="selectedItem"
             @handleSubmit="onCategorySubmit"
-            @handleDelete="inventoryStore.storeDeleteCategory"
+            @handleDelete="onCategoryDelete"
             v-model:currentCategory="currentCategory"
             :displayX="false"
             :validationMessage="validationMessage"
@@ -143,14 +184,14 @@ const onCategorySubmit = (newCategory) => {
             v-model:displayForm="displayItemForm"
             :categoryList="categoryList"
             :selectedItem="selectedItem"
-            @handleSubmit="inventoryStore.storeAddItem"
-            @handleDelete="inventoryStore.storeDeleteItem"
+            @handleSubmit="onItemSubmit"
+            @handleDelete="onItemDelete"
           />
           <EditCategoryForm
             v-model:displayForm="displayCategoryForm"
             :selectedCategory="selectedItem"
             @handleSubmit="onCategorySubmit"
-            @handleDelete="inventoryStore.storeDeleteCategory"
+            @handleDelete="onCategoryDelete"
             v-model:currentCategory="currentCategory"
             :validationMessage="validationMessage"
           />

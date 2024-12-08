@@ -87,7 +87,7 @@ const onDelete = () => {
           </v-btn>
         </v-col>
 
-        <v-col cols="12" md="6" class="pa-2">
+        <v-col cols="12" class="pa-2">
           <v-text-field
             color="primary"
             label="Category name"
