@@ -6,8 +6,17 @@ const props = defineProps({
   displayIcon: { type: Boolean, default: false },
 });
 
+// Define emits
+const emit = defineEmits(["onIconClick"]);
+
 // Router setup
 const router = useRouter();
+
+const onIconClick = () => {
+  router.push("/");
+
+  emit("onIconClick");
+};
 </script>
 
 <template>
@@ -17,7 +26,7 @@ const router = useRouter();
       <v-row no-gutters class="headerRow">
         <!-- Back Button -->
         <v-col>
-          <v-btn @click="router.push('/')" color="primary" variant="text" icon>
+          <v-btn @click="onIconClick" color="primary" variant="text" icon>
             <v-icon class="iconSize">mdi-chevron-left</v-icon>
           </v-btn>
         </v-col>

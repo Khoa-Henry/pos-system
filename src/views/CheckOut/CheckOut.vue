@@ -43,10 +43,17 @@ const openCheckoutDialog = () => {
     checkoutDialog.value = true;
   }
 };
+
+const syncDirtyItems = () => {
+  inventoryStore.syncDirtyItems();
+};
+
+// Set up a timer to sync dirty items every 5 minutes (300000 ms)
+setInterval(syncDirtyItems, 300000);
 </script>
 
 <template>
-  <PageLayout :displayIcon="changePageLayout">
+  <PageLayout :displayIcon="changePageLayout" @onIconClick="syncDirtyItems">
     <template #iconHeader>
       <v-btn
         variant="text"

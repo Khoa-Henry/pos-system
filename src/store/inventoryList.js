@@ -6,6 +6,7 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  runTransaction,
   updateDoc,
 } from "firebase/firestore";
 import { defineStore } from "pinia";
@@ -60,6 +61,33 @@ export const useInventoryListStore = defineStore("inventoryList", {
       } catch (error) {
         console.error("Error fetching inventory:", error);
         // TODO: Navigate to error page or show a notification
+      }
+    },
+
+    async syncDirtyItems() {
+      for (const category of this.value) {
+        for (const item of category.items) {
+          if (item.isDirty) {
+            try {
+              const itemDocRef = doc(db, "Items", item.itemId);
+
+              await runTransaction(db, async (transaction) => {
+                const itemSnapshot = await transaction.get(itemDocRef);
+                if (!itemSnapshot.exists()) {
+                  throw new Error(`Item ${item.itemId} does not exist.`);
+                }
+
+                // Update the item with the new data
+                transaction.update(itemDocRef, item.toFirestore());
+
+                // Mark the item as clean after syncing
+                item.isDirty = false;
+              });
+            } catch (error) {
+              console.error(`Sync failed:`, error);
+            }
+          }
+        }
       }
     },
 
