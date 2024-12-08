@@ -33,7 +33,7 @@ const onItemSelection = (item) => {
 };
 
 // Open payment dialog
-const onPayment = () => {
+const toPayment = () => {
   paymentDialog.value = true;
 };
 
@@ -50,6 +50,10 @@ const syncDirtyItems = () => {
 
 // Set up a timer to sync dirty items every 5 minutes (300000 ms)
 setInterval(syncDirtyItems, 300000);
+
+const onPaymentSubmit = () => {
+  paymentDialog.value = false;
+};
 </script>
 
 <template>
@@ -68,7 +72,12 @@ setInterval(syncDirtyItems, 300000);
       </v-btn>
     </template>
 
-    <PaymentSelection v-model:dialog="paymentDialog" />
+    <PaymentSelection
+      @onPaymentSelection="onPaymentSubmit"
+      @cancelDialog="paymentDialog = false"
+      :totalPrice="selectedItemsStore.totalPrice"
+      :dialog="paymentDialog"
+    />
     <MobileCheckoutSection
       v-model:dialog="checkoutDialog"
       v-model:paymentDialog="paymentDialog"
@@ -117,7 +126,7 @@ setInterval(syncDirtyItems, 300000);
                 <v-btn
                   block
                   color="primary"
-                  @click="onPayment()"
+                  @click="toPayment()"
                   :disabled="selectedItemsStore.totalItem === 0"
                 >
                   Continue to payment

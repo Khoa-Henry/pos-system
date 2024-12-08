@@ -136,7 +136,6 @@ export const useInventoryListStore = defineStore("inventoryList", {
           const itemsCollectionRef = collection(db, "Items").withConverter(
             CategoryItem.converter
           );
-          console.log(newItem.toFirestore());
           const docRef = await addDoc(
             itemsCollectionRef,
             newItem.toFirestore()

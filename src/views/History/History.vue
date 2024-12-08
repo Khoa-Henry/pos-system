@@ -2,10 +2,27 @@
 import PageLayout from "@/Components/PageLayout.vue";
 import { ref } from "vue";
 
-const open = ref(["Users"]);
-const admins = ref([
-  ["Management", "mdi-account-multiple-outline"],
-  ["Settings", "mdi-cog-outline"],
+// Sample data for the table
+const orders = ref([
+  {
+    orderId: "MnQ8NfGYhRg9MYEh4soC",
+    total: 100.5,
+    paymentType: "cash",
+    issuer: "Employee",
+  },
+  {
+    orderId: "MnQ8NfGYhRg9MYEh4soC",
+    total: 200.75,
+    paymentType: "Card",
+    issuer: "Admin",
+  },
+  { orderId: 3, total: 50.0, paymentType: "Card", issuer: "Employee" },
+  {
+    orderId: 4,
+    total: 150.25,
+    paymentType: "cash",
+    issuer: "Admin",
+  },
 ]);
 </script>
 
@@ -16,53 +33,34 @@ const admins = ref([
         <v-col cols="3">
           <v-date-input label="Date input" variant="underlined"></v-date-input>
         </v-col>
+      </v-row>
 
+      <v-row no-gutters justify="center">
         <v-col cols="12">
-          <v-list v-model:opened="open">
-            <v-list-group value="Admin">
-              <template v-slot:activator="{ props }">
-                <v-list-item v-bind="props" title="Admin"></v-list-item>
-              </template>
-
-              <v-list-item
-                v-for="([title, icon], i) in admins"
-                :key="i"
-                :title="title"
-                :value="title"
-                style="padding-left: 0px"
-              ></v-list-item>
-            </v-list-group>
-          </v-list>
+          <v-table>
+            <thead>
+              <tr>
+                <th class="text-left">Order ID</th>
+                <th class="text-left">Total</th>
+                <th class="text-left">Payment Type</th>
+                <th class="text-left">Issuer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="order in orders" :key="order.orderId">
+                <td>{{ order.orderId }}</td>
+                <td>{{ order.total.toFixed(2) }}</td>
+                <td>{{ order.paymentType }}</td>
+                <td>{{ order.issuer }}</td>
+              </tr>
+            </tbody>
+          </v-table>
         </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
-        <v-col cols="12"> item </v-col>
       </v-row>
     </v-container>
   </page-layout>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* Add any scoped styles here */
+</style>

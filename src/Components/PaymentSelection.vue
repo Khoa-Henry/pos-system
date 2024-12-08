@@ -1,22 +1,12 @@
 <script setup>
-import { useSelectedItemsStore } from "@/store/selectedItems";
-
 // Define props and emit events
-const props = defineProps(["dialog"]);
-const emit = defineEmits(["update:dialog"]);
-const selectedItemsStore = useSelectedItemsStore();
-
-// Close the payment dialog
-const closeDialog = () => {
-  emit("update:dialog", false);
-};
+const props = defineProps(["dialog", "totalPrice"]);
+const emit = defineEmits(["onPaymentSelection", "cancelDialog"]);
 
 // Handle payment method selection
-const onMethodSelection = () => {
+const onMethodSelection = (type) => {
   // Creation of the order should be here
-
-  closeDialog();
-  selectedItemsStore.storeClearSelectedItems(); // Clear selected items after payment
+  emit("onPaymentSelection", type);
 };
 </script>
 
@@ -28,7 +18,7 @@ const onMethodSelection = () => {
   >
     <v-card style="height: 100%">
       <v-toolbar>
-        <v-btn icon="mdi-close" @click="closeDialog"> </v-btn>
+        <v-btn icon="mdi-close" @click="emit('cancelDialog')"> </v-btn>
         <v-toolbar-title>Payment Portal</v-toolbar-title>
       </v-toolbar>
 
@@ -38,13 +28,10 @@ const onMethodSelection = () => {
           <v-col cols="12" class="text-center">
             <h1>
               {{
-                Math.abs(selectedItemsStore.totalPrice).toLocaleString(
-                  "en-US",
-                  {
-                    style: "currency",
-                    currency: "USD",
-                  }
-                )
+                Math.abs(props.totalPrice).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })
               }}
             </h1>
           </v-col>
@@ -66,7 +53,7 @@ const onMethodSelection = () => {
                     append-icon="mdi-chevron-right"
                     block
                     class="d-flex justify-space-between"
-                    @click="onMethodSelection"
+                    @click="onMethodSelection('cash')"
                   >
                     Cash
                   </v-btn>
@@ -81,7 +68,7 @@ const onMethodSelection = () => {
                     append-icon="mdi-chevron-right"
                     block
                     class="d-flex justify-space-between"
-                    @click="onMethodSelection"
+                    @click="onMethodSelection('card')"
                   >
                     Card
                   </v-btn>
