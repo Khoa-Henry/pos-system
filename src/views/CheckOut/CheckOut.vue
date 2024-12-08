@@ -6,9 +6,9 @@ import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
 import CategorySelection from "../../Components/CategorySelection.vue";
 import ItemSelection from "../../Components/ItemSelection.vue";
+import MobileCheckoutSection from "../../Components/MobileCheckoutSection.vue";
+import PaymentSelection from "../../Components/PaymentSelection.vue";
 import { useInventoryListStore } from "../../store/inventoryList";
-import MobileCheckoutSection from "./component/MobileCheckoutSection.vue";
-import PaymentSelection from "./component/PaymentSelection.vue";
 
 const { width } = useDisplay();
 const currentCategory = ref("All");
