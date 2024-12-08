@@ -18,7 +18,7 @@ export function CategoryItem(name, id, qty, pPU, categoryName, categoryId) {
       quantity: this.quantity,
       pricePerUnit: this.pricePerUnit,
       categoryName: this.categoryName,
-      categoryID: this.categoryID,
+      categoryId: this.categoryId, // Corrected from categoryID to categoryId
     };
   };
 
@@ -32,7 +32,7 @@ export function CategoryItem(name, id, qty, pPU, categoryName, categoryId) {
       data.quantity,
       data.pricePerUnit,
       data.categoryName,
-      data.categoryID
+      data.categoryId
     );
 
     return item;
@@ -40,7 +40,7 @@ export function CategoryItem(name, id, qty, pPU, categoryName, categoryId) {
 }
 
 CategoryItem.converter = {
-  toFirestore: (item) => item.toFirestore(),
+  toFirestore: (item) => item,
   fromFirestore: (snapshot, options) => {
     const data = snapshot.data(options);
     return new CategoryItem(

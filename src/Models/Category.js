@@ -46,7 +46,6 @@ export function Category(name, id, itemList = []) {
   this.toFirestore = function () {
     return {
       categoryName: this.categoryName,
-      items: this.items.map((item) => item.toFirestore()), // serialized the item oject correctly
     };
   };
 

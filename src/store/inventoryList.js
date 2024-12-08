@@ -1,6 +1,13 @@
 import { Category } from "@/Models/Category";
 import { CategoryItem } from "@/Models/Item";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import { defineStore } from "pinia";
 import { db } from "../firebase";
 
@@ -10,82 +17,108 @@ export const useInventoryListStore = defineStore("inventoryList", {
   },
 
   actions: {
-    // Fetch all categories and items from Firestore to populate the store
+    // Fetch all categories and items from Firestore to populate the store with real-time updates
     async fetchInventory() {
       try {
         const store = [];
 
-        // Fetch categories
+        // Fetch categories with real-time updates
         const categoryCollectionRef = collection(
           db,
           "Categories"
         ).withConverter(Category.converter);
-        const categorySnapshot = await getDocs(categoryCollectionRef);
+        onSnapshot(categoryCollectionRef, (snapshot) => {
+          store.length = 0; // Clear the store
+          snapshot.docs.forEach((doc) => {
+            const category = doc.data();
+            if (category) {
+              category.categoryId = doc.id; // Ensure categoryId is set
+              store.push(category);
+            }
+          });
 
-        // Create a map for categories for efficient lookup
-        const categoryMap = new Map();
+          // Fetch items with real-time updates
+          const itemsCollectionRef = collection(db, "Items").withConverter(
+            CategoryItem.converter
+          );
+          onSnapshot(itemsCollectionRef, (snapshot) => {
+            snapshot.docs.forEach((doc) => {
+              const item = doc.data();
+              if (item) {
+                const category = store.find(
+                  (cat) => cat.categoryId === item.categoryId
+                );
+                if (category) {
+                  category.addItem(item);
+                }
+              }
+            });
 
-        categorySnapshot.docs.forEach((doc) => {
-          const category = doc.data();
-          if (category) {
-            category.items = [];
-            categoryMap.set(category.categoryId, category);
-            store.push(category);
-          }
+            this.value = [...store]; // Update the store state with the new data
+          });
         });
-
-        // Fetch items
-        const itemsCollectionRef = collection(db, "Items").withConverter(
-          CategoryItem.converter
-        );
-        const itemsSnapshot = await getDocs(itemsCollectionRef);
-
-        itemsSnapshot.docs.forEach((doc) => {
-          const item = doc.data();
-          if (item && categoryMap.has(item.categoryId)) {
-            categoryMap.get(item.categoryId).items.push(item);
-          }
-        });
-
-        this.value = store;
       } catch (error) {
         console.error("Error fetching inventory:", error);
         // TODO: Navigate to error page or show a notification
       }
     },
 
-    storeDeleteItem(itemId, categoryName) {
+    async storeDeleteItem(itemId, categoryName) {
       const category = this.value.find(
         (cat) => cat.categoryName === categoryName
       );
       if (category) {
-        category.deleteItem(itemId);
-        // TODO: have to update teh database right away
+        const item = category.items.find((item) => item.itemId === itemId);
+        if (item) {
+          const itemDocRef = doc(db, "Items", item.itemId);
+          await deleteDoc(itemDocRef);
+          category.deleteItem(itemId);
+        }
       }
     },
 
-    storeAddItem(newItem, categoryName) {
-      const categoryIndex = this.value.findIndex(
+    async storeAddItem(newItem, categoryName) {
+      const category = this.value.find(
         (cat) => cat.categoryName === categoryName
       );
-      newItem.categoryName = this.value[categoryIndex].categoryName;
-      newItem.categoryId = this.value[categoryIndex].categoryId;
-      // Check if the item exists in a different category
-      for (let i = 0; i < this.value.length; i++) {
-        if (i !== categoryIndex) {
-          // Skip the current category
-          const existingItemIndex = this.value[i].items.findIndex(
-            (item) => item.itemId === newItem.itemId
-          );
-          if (existingItemIndex !== -1) {
-            // If it exists in a different category, remove it from there
-            this.value[i].items.splice(existingItemIndex, 1);
-            break;
-          }
-        }
-      }
+      if (category) {
+        // Ensure newItem has the correct categoryName and categoryId
+        newItem.categoryName = category.categoryName;
+        newItem.categoryId = category.categoryId;
 
-      this.value[categoryIndex].addItem(newItem);
+        // Add or update the item in Firestore
+        if (newItem.itemId) {
+          // Check if the item exists in a different category
+          for (let i = 0; i < this.value.length; i++) {
+            if (i !== this.value.indexOf(category)) {
+              const existingItemIndex = this.value[i].findItemIndexById(
+                newItem.itemId
+              );
+              if (existingItemIndex !== -1) {
+                // If it exists in a different category, remove it from there
+                this.value[i].deleteItem(newItem.itemId);
+                break;
+              }
+            }
+          }
+
+          const itemDocRef = doc(db, "Items", newItem.itemId);
+          await updateDoc(itemDocRef, newItem.toFirestore());
+        } else {
+          const itemsCollectionRef = collection(db, "Items").withConverter(
+            CategoryItem.converter
+          );
+          console.log(newItem.toFirestore());
+          const docRef = await addDoc(
+            itemsCollectionRef,
+            newItem.toFirestore()
+          );
+          newItem.itemId = docRef.id; // Assign the generated ID from Firestore
+        }
+
+        // Add or update the item in the category
+        category.addItem(newItem);
+      }
     },
 
     storeAddCategory(newCategory) {
