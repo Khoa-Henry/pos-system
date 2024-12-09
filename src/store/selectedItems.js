@@ -1,5 +1,5 @@
+import { CartItem } from "@/Models/CartItem";
 import { defineStore } from "pinia";
-import { CartItem } from "../Models/CartItem";
 
 export const useSelectedItemsStore = defineStore("selectedItems", {
   state: () => ({
@@ -12,19 +12,26 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
     storeAddCustomItem(customItem, count) {
       const existingCartItem = this.items.find(
         (item) =>
-          item.value.itemName === customItem.itemName &&
-          item.value.itemId === customItem.itemId
+          item.itemName === customItem.itemName &&
+          item.itemId === customItem.itemId
       );
 
       if (existingCartItem) {
         // If item already exists, increment its count by the specified amount
-        existingCartItem.count += count;
+        existingCartItem.increment();
       } else {
         // Add a new CartItem instance to the items array
-        const newCartItem = CartItem(customItem, count);
+        const newCartItem = new CartItem(
+          customItem.itemName,
+          customItem.itemId,
+          customItem.quantity,
+          customItem.pricePerUnit,
+          customItem.categoryName,
+          customItem.categoryId,
+          count
+        );
         this.items.push(newCartItem);
       }
-
       this.totalPrice +=
         Math.round(customItem.pricePerUnit * count * 100) / 100;
       this.totalItem += count;
@@ -33,8 +40,7 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
     storeAddSelectItem(item) {
       const existingCartItem = this.items.find(
         (cartItem) =>
-          cartItem.value.itemName === item.itemName &&
-          cartItem.value.itemId === item.itemId
+          cartItem.itemName === item.itemName && cartItem.itemId === item.itemId
       );
 
       if (existingCartItem) {
@@ -42,9 +48,16 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
         existingCartItem.increment();
       } else {
         // Create a new CartItem if it doesn't already exist in the cart
-        const newCartItem = CartItem(item);
-        newCartItem.value.quantity--;
-        newCartItem.value.isDirty = true;
+        const newCartItem = new CartItem(
+          item.itemName,
+          item.itemId,
+          item.quantity,
+          item.pricePerUnit,
+          item.categoryName,
+          item.categoryId,
+          1
+        );
+        newCartItem.quantity--;
         this.items.push(newCartItem);
       }
 
@@ -55,8 +68,7 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
     storeDeleteSelectedItem(cartItem) {
       const index = this.items.findIndex(
         (item) =>
-          item.value.itemName === cartItem.value.itemName &&
-          item.value.itemId === cartItem.value.itemId
+          item.itemName === cartItem.itemName && item.itemId === cartItem.itemId
       );
 
       if (index !== -1) {
@@ -68,11 +80,10 @@ export const useSelectedItemsStore = defineStore("selectedItems", {
         // Remove item if count reaches zero
         if (selectedCartItem.count === 0) {
           this.items.splice(index, 1);
-          selectedCartItem.value.isDirty = false;
         }
       }
 
-      this.totalPrice -= Math.round(cartItem.value.pricePerUnit * 100) / 100;
+      this.totalPrice -= Math.round(cartItem.pricePerUnit * 100) / 100;
       this.totalItem -= 1;
     },
 

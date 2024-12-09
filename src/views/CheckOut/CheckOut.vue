@@ -1,7 +1,11 @@
 <script setup>
 import CheckoutList from "@/Components/CheckoutList.vue";
 import PageLayout from "@/Components/PageLayout.vue";
+import { db } from "@/firebase";
+import { Order } from "@/Models/Order";
 import { useSelectedItemsStore } from "@/store/selectedItems";
+import { useUserStore } from "@/store/user";
+import { addDoc, collection } from "firebase/firestore";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
 import CategorySelection from "../../Components/CategorySelection.vue";
@@ -21,14 +25,26 @@ const changePageLayout = computed(() => {
 
 const inventoryStore = useInventoryListStore();
 const selectedItemsStore = useSelectedItemsStore();
+const userStore = useUserStore();
 
 // Remove item from the selected items
 const onItemRemove = (item) => {
+  const category = inventoryStore.value.find(
+    (cat) => cat.categoryName === item.categoryName
+  );
+  const inventoryItemIndex = category.findItemIndexById(item.itemId);
+  category.items[inventoryItemIndex].quantity++;
+
+  if (item.count === 1) {
+    category.items[inventoryItemIndex].isDirty = false;
+  }
   selectedItemsStore.storeDeleteSelectedItem(item);
 };
 
 // Add item to the selected items
 const onItemSelection = (item) => {
+  item.quantity--;
+  item.isDirty = true;
   selectedItemsStore.storeAddSelectItem(item);
 };
 
@@ -51,7 +67,28 @@ const syncDirtyItems = () => {
 // Set up a timer to sync dirty items every 5 minutes (300000 ms)
 setInterval(syncDirtyItems, 300000);
 
-const onPaymentSubmit = () => {
+const onPaymentSubmit = async (type) => {
+  try {
+    // create the order object and save it to a data base
+    const order = new Order(
+      "",
+      selectedItemsStore.items.map((item) => item),
+      new Date(),
+      type,
+      userStore.role,
+      selectedItemsStore.totalPrice
+    );
+
+    const ordersCollectionRef = collection(db, "Orders").withConverter(
+      Order.converter
+    );
+
+    await addDoc(ordersCollectionRef, order.toFirestore());
+    selectedItemsStore.storeClearSelectedItems();
+    syncDirtyItems();
+  } catch (e) {
+    console.error(`Purchase failed:`, e);
+  }
   paymentDialog.value = false;
 };
 </script>

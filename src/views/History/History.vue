@@ -24,6 +24,8 @@ const orders = ref([
     issuer: "Admin",
   },
 ]);
+const loading = ref(true);
+const dateInput = ref(new Date());
 </script>
 
 <template>
@@ -37,7 +39,37 @@ const orders = ref([
 
       <v-row no-gutters justify="center">
         <v-col cols="12">
-          <v-table>
+          <v-table v-if="loading">
+            <thead>
+              <tr>
+                <th class="text-left">Order ID</th>
+                <th class="text-left">Total</th>
+                <th class="text-left">Payment Type</th>
+                <th class="text-left">Issuer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="order in orders" :key="order.orderId">
+                <td>
+                  <v-skeleton-loader :loading="loading" type="list-item">
+                  </v-skeleton-loader>
+                </td>
+                <td>
+                  <v-skeleton-loader :loading="loading" type="list-item">
+                  </v-skeleton-loader>
+                </td>
+                <td>
+                  <v-skeleton-loader :loading="loading" type="list-item">
+                  </v-skeleton-loader>
+                </td>
+                <td>
+                  <v-skeleton-loader :loading="loading" type="list-item">
+                  </v-skeleton-loader>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+          <v-table v-else>
             <thead>
               <tr>
                 <th class="text-left">Order ID</th>
