@@ -1,4 +1,5 @@
 <script setup>
+import EditOrderDetails from "@/Components/EditOrderDetails.vue";
 import PageLayout from "@/Components/PageLayout.vue";
 import { db } from "@/firebase";
 import {
@@ -18,7 +19,8 @@ import { Order } from "../../Models/Order";
 const orders = ref([]);
 const loading = ref(true);
 const dateInput = ref(new Date());
-
+const dialog = ref(false);
+const selectedOrder = {};
 const { height } = useDisplay();
 const displayHeight = computed(() => height.value - 178);
 
@@ -39,7 +41,7 @@ const fetchOrders = async (date) => {
       ordersCollectionRef,
       where("date", ">=", startOfDay),
       where("date", "<=", endOfDay),
-      orderBy("date")
+      orderBy("date", "desc")
     );
 
     const querySnapshot = await getDocs(q);
@@ -61,15 +63,31 @@ watch(dateInput, (newDate) => {
 onMounted(() => {
   fetchOrders(dateInput.value);
 });
+
+const handleDelete = (order) => {
+  console.log(order, "delete");
+  // fetchOrders(dateInput.value);
+};
+
+const handleSubmit = (order) => {
+  console.log(order, "save");
+  // fetchOrders(dateInput.value);
+};
 </script>
 
 <template>
   <page-layout>
+    <EditOrderDetails
+      :selectedOrder="selectedOrder"
+      v-model:dialog="dialog"
+      @handleDelete="handleDelete"
+      @handleSubmit="handleSubmit"
+    />
     <v-container fluid class="container">
       <v-row no-gutters justify="center" align="center" class="pb-3">
         <v-col cols="12" sm="9" md="3">
           <v-date-input
-            label="Date input"
+            label="Date"
             variant="underlined"
             v-model="dateInput"
           ></v-date-input>
@@ -85,16 +103,26 @@ onMounted(() => {
           <v-table v-if="!loading" :height="displayHeight">
             <thead>
               <tr>
-                <th class="text-left">Order ID</th>
-                <th class="text-left">Total</th>
+                <th class="text-left bold">Order ID</th>
+                <th class="text-right">Total</th>
                 <th class="text-left">Payment Type</th>
                 <th class="text-left">Issuer</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="order in orders" :key="order.orderId">
+              <tr
+                v-for="order in orders"
+                :key="order.orderId"
+                @click="
+                  selectedOrder = order;
+                  dialog = true;
+                "
+                class="clickable-row"
+              >
                 <td>{{ order.orderId }}</td>
-                <td>{{ order.total.toFixed(2) }}</td>
+                <td class="text-right">
+                  ${{ Number(order.total).toFixed(2) }}
+                </td>
                 <td>{{ order.paymentType }}</td>
                 <td>{{ order.issuer }}</td>
               </tr>
@@ -115,5 +143,14 @@ onMounted(() => {
   padding-left: 8px;
   padding-right: 8px;
   padding-bottom: 0;
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.clickable-row:hover {
+  background-color: #575757; /* Light gray background on hover */
 }
 </style>

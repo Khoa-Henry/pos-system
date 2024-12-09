@@ -65,7 +65,7 @@ const syncDirtyItems = () => {
 };
 
 // Set up a timer to sync dirty items every 5 minutes (300000 ms)
-setInterval(syncDirtyItems, 300000);
+// setInterval(syncDirtyItems, 300000);
 
 const onPaymentSubmit = async (type) => {
   try {
