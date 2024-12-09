@@ -54,6 +54,7 @@ CartItem.converter = {
   toFirestore: (item) => {
     return {
       itemName: item.itemName,
+      itemId: item.itemId,
       quantity: item.quantity,
       pricePerUnit: item.pricePerUnit,
       categoryName: item.categoryName,
@@ -65,7 +66,7 @@ CartItem.converter = {
     const data = snapshot.data(options);
     return new CartItem(
       data.itemName,
-      snapshot.id,
+      data.itemId,
       data.quantity,
       data.pricePerUnit,
       data.categoryName,
