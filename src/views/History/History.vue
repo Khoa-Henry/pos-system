@@ -20,7 +20,7 @@ const orders = ref([]);
 const loading = ref(true);
 const dateInput = ref(new Date());
 const dialog = ref(false);
-const selectedOrder = {};
+const selectedOrder = ref({});
 const { height } = useDisplay();
 const displayHeight = computed(() => height.value - 178);
 
