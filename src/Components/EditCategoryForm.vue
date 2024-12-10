@@ -18,6 +18,10 @@ const props = defineProps({
     default: true,
   },
   validationMessage: { type: String, default: "" },
+  userRole: {
+    type: String,
+    required: true,
+  },
 });
 
 // Define emits
@@ -101,7 +105,12 @@ const onDelete = () => {
 
     <v-row no-gutters justify="center" class="action-buttons">
       <v-col cols="6" class="pa-1">
-        <v-btn color="error" v-if="displayDelete" @click="onDelete" block>
+        <v-btn
+          color="error"
+          v-if="userRole === 'Admin' && displayDelete"
+          @click="onDelete"
+          block
+        >
           Delete
         </v-btn>
       </v-col>

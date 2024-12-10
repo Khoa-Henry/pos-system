@@ -1,6 +1,7 @@
 <script setup>
 import EditCategoryForm from "@/Components/EditCategoryForm.vue";
 import PageLayout from "@/Components/PageLayout.vue";
+import { useUserStore } from "@/store/user";
 import { computed, ref } from "vue";
 import { useDisplay } from "vuetify";
 import CategorySelection from "../../Components/CategorySelection.vue";
@@ -10,6 +11,7 @@ import { useInventoryListStore } from "../../store/inventoryList";
 
 const { width } = useDisplay();
 const inventoryStore = useInventoryListStore();
+const userStore = useUserStore();
 
 const currentCategory = ref("All");
 const selectedItem = ref({});
@@ -150,6 +152,7 @@ const onItemSubmit = (newItem, categoryName) => {
             @handleSubmit="onItemSubmit"
             @handleDelete="onItemDelete"
             :displayX="false"
+            :userRole="userStore.role"
           />
           <EditCategoryForm
             v-model:displayForm="displayCategoryForm"
@@ -159,6 +162,7 @@ const onItemSubmit = (newItem, categoryName) => {
             v-model:currentCategory="currentCategory"
             :displayX="false"
             :validationMessage="validationMessage"
+            :userRole="userStore.role"
           />
         </v-card>
       </v-dialog>
@@ -186,6 +190,7 @@ const onItemSubmit = (newItem, categoryName) => {
             :selectedItem="selectedItem"
             @handleSubmit="onItemSubmit"
             @handleDelete="onItemDelete"
+            :userRole="userStore.role"
           />
           <EditCategoryForm
             v-model:displayForm="displayCategoryForm"
@@ -194,6 +199,7 @@ const onItemSubmit = (newItem, categoryName) => {
             @handleDelete="onCategoryDelete"
             v-model:currentCategory="currentCategory"
             :validationMessage="validationMessage"
+            :userRole="userStore.role"
           />
         </v-sheet>
       </v-container>
