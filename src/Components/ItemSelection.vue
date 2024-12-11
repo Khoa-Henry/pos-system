@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
+import BarcodeScanner from "./BarcodeScanner.vue";
 import CustomItemModal from "./CustomItemModal.vue";
 
 // Define props
@@ -19,6 +20,7 @@ const emit = defineEmits([
 // State variables
 const searchText = ref("");
 const customItemDialog = ref(false);
+const videoDialog = ref(false);
 
 // Constants
 const ALL_CATEGORY = "All";
@@ -46,6 +48,10 @@ const displayItems = computed(() => {
   }
 });
 
+const getResults = (result) => {
+  searchText.value = result;
+};
+
 // Emit the addition of a custom item
 const addCustomItem = (item, count) => {
   emit("addCustomItem", item, count);
@@ -57,23 +63,31 @@ const addCustomItem = (item, count) => {
     v-model:dialog="customItemDialog"
     @addCustomItem="addCustomItem"
   />
+  <BarcodeScanner v-model:dialog="videoDialog" @scannedContent="getResults" />
 
   <v-col cols="7" md="5" lg="6" class="fullHeight sectionCol">
     <v-container fluid class="px-0 pb-0 fullHeight">
       <v-row no-gutters class="yHeight">
         <!-- Search Field -->
         <v-col cols="12" class="px-2 pb-2" style="flex: 0 0 auto">
-          <v-text-field
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            variant="outlined"
-            color="primary"
-            hide-details
-            single-line
-            clearable
-            dense
-            v-model="searchText"
-          />
+          <v-row no-gutters align="center">
+            <v-text-field
+              label="Search"
+              prepend-inner-icon="mdi-magnify"
+              variant="outlined"
+              color="primary"
+              hide-details
+              single-line
+              clearable
+              dense
+              v-model="searchText"
+            />
+            <v-btn
+              icon="mdi-scan-helper"
+              @click="videoDialog = true"
+              class="ml-2"
+            />
+          </v-row>
         </v-col>
 
         <!-- Items Section -->

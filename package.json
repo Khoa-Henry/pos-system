@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@firebase/auth": "^1.8.1",
+    "@zxing/library": "^0.21.3",
     "chart.js": "^4.4.7",
     "firebase": "^11.0.2",
     "firebase-tools": "^13.28.0",
