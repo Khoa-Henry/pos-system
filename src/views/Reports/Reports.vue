@@ -1,7 +1,10 @@
 <script setup>
+import IssuerPieChart from "@/Components/IssuerPieChart.vue";
 import PageLayout from "@/Components/PageLayout.vue";
+import PaymentTypeBarChart from "@/Components/PaymentTypeBarChart.vue";
 import { useOrdersStore } from "@/store/orders";
 import { computed, onMounted, ref } from "vue";
+import LineChart from "../../Components/LineChart.vue";
 
 const ordersStore = useOrdersStore();
 
@@ -164,6 +167,22 @@ const issuerTotals = computed(() => {
                 </v-col>
               </v-row>
             </v-card-text>
+            <v-row>
+              <v-col cols="12">
+                <v-card-title class="text-left font-weight-bold">
+                  Visuals
+                </v-card-title>
+                <v-divider class="my-2"></v-divider>
+                <LineChart
+                  :todayTotal="totalAmount"
+                  :previousDayTotal="previousTotalAmount"
+                />
+                <v-divider class="my-2"></v-divider>
+                <PaymentTypeBarChart :paymentTypeTotals="paymentTypeTotals" />
+                <v-divider class="my-2"></v-divider>
+                <IssuerPieChart :issuerTotals="issuerTotals" />
+              </v-col>
+            </v-row>
           </v-card>
         </v-col>
       </v-row>
