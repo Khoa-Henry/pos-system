@@ -1,77 +1,44 @@
 <script setup>
 import EditOrderDetails from "@/Components/EditOrderDetails.vue";
 import PageLayout from "@/Components/PageLayout.vue";
-import { db } from "@/firebase";
-import {
-  collection,
-  getDocs,
-  orderBy,
-  query,
-  Timestamp,
-  where,
-} from "firebase/firestore";
-import { computed, onMounted, ref, watch } from "vue";
+import { useOrdersStore } from "@/store/orders";
+import { computed, onMounted, ref } from "vue";
 import { useDisplay } from "vuetify/lib/framework.mjs";
 import OrderSkeletonLoader from "../../Components/OrderSkeletonLoader.vue";
-import { Order } from "../../Models/Order";
 
-// Sample data for the table
-const orders = ref([]);
-const loading = ref(true);
-const dateInput = ref(new Date());
+const ordersStore = useOrdersStore();
 const dialog = ref(false);
 const selectedOrder = ref({});
+const dateInput = ref(new Date());
 const { height } = useDisplay();
 const displayHeight = computed(() => height.value - 178);
 
-// Function to fetch orders based on the selected date
-const fetchOrders = async (date) => {
-  loading.value = true;
-  try {
-    const startOfDay = Timestamp.fromDate(new Date(date.setHours(0, 0, 0, 0)));
-    const endOfDay = Timestamp.fromDate(
-      new Date(date.setHours(23, 59, 59, 999))
-    );
-
-    const ordersCollectionRef = collection(db, "Orders").withConverter(
-      Order.converter
-    );
-
-    const q = query(
-      ordersCollectionRef,
-      where("date", ">=", startOfDay),
-      where("date", "<=", endOfDay),
-      orderBy("date", "desc")
-    );
-
-    const querySnapshot = await getDocs(q);
-    orders.value = querySnapshot.docs.map((doc) => doc.data());
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    orders.value = [];
-  } finally {
-    loading.value = false;
-  }
+const getNewOrders = () => {
+  ordersStore.fetchOrders(dateInput.value);
 };
 
-// Watch the dateInput for changes and fetch orders accordingly
-watch(dateInput, (newDate) => {
-  fetchOrders(newDate);
-});
+const getTodayOrders = () => {
+  ordersStore.fetchOrders(new Date());
+  dateInput.value = new Date();
+};
 
 // Fetch orders when the component is mounted with the current date
 onMounted(() => {
-  fetchOrders(dateInput.value);
+  if (ordersStore.date && ordersStore.orders.length > 0) {
+    dateInput.value = ordersStore.date;
+  } else {
+    ordersStore.fetchOrders(dateInput.value);
+  }
 });
 
 const handleDelete = (order) => {
   console.log(order, "delete");
-  // fetchOrders(dateInput.value);
+  // ordersStore.fetchOrders(dateInput.value);
 };
 
 const handleSubmit = (order) => {
   console.log(order, "save");
-  // fetchOrders(dateInput.value);
+  // ordersStore.fetchOrders(dateInput.value);
 };
 </script>
 
@@ -90,17 +57,18 @@ const handleSubmit = (order) => {
             label="Date"
             variant="underlined"
             v-model="dateInput"
+            @update:modelValue="getNewOrders"
           ></v-date-input>
         </v-col>
         <v-col cols="auto" class="pl-3">
-          <v-btn @click="dateInput = new Date()">today</v-btn>
+          <v-btn @click="getTodayOrders">today</v-btn>
         </v-col>
       </v-row>
 
       <v-row no-gutters justify="center">
         <v-col cols="12">
-          <OrderSkeletonLoader :loading="loading" />
-          <v-table v-if="!loading" :height="displayHeight">
+          <OrderSkeletonLoader :loading="ordersStore.loading" />
+          <v-table v-if="!ordersStore.loading" :height="displayHeight">
             <thead>
               <tr>
                 <th class="text-left bold">Order ID</th>
@@ -111,7 +79,7 @@ const handleSubmit = (order) => {
             </thead>
             <tbody>
               <tr
-                v-for="order in orders"
+                v-for="order in ordersStore.orders"
                 :key="order.orderId"
                 @click="
                   selectedOrder = order;
@@ -126,8 +94,7 @@ const handleSubmit = (order) => {
                 <td>{{ order.paymentType }}</td>
                 <td>{{ order.issuer }}</td>
               </tr>
-              <tr></tr>
-              <tr v-if="orders.length === 0">
+              <tr v-if="ordersStore.orders.length === 0">
                 <td>No orders</td>
               </tr>
             </tbody>

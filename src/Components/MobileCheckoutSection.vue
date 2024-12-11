@@ -29,7 +29,7 @@ const onPayment = () => {
         >
       </v-toolbar>
 
-      <v-container fluid class="pb-0 full-height overflow-scroll">
+      <v-container fluid class="pb-0 full-height overflow-auto">
         <CheckoutList
           :list="selectedItemsStore.items"
           @onItemRemove="selectedItemsStore.storeDeleteSelectedItem"
@@ -70,7 +70,7 @@ const onPayment = () => {
   height: 100%;
 }
 
-.overflow-scroll {
+.overflow-auto {
   overflow: auto;
 }
 </style>

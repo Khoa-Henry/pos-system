@@ -20,12 +20,12 @@ const startingPosition = ref(0);
 
 // Define the items with their properties
 const items = [
-  { text: "Setting", href: "/", icon: "mdi-cogs" },
+  { text: "Setting", href: "/notfound", icon: "mdi-cogs" },
   { text: "Logout", href: "/login", icon: "mdi-logout" },
   { text: "Inventory", href: "/inventory", icon: "mdi-pencil" },
   { text: "History", href: "/history", icon: "mdi-history" },
   { text: "Checkout", href: "/checkout", icon: "mdi-table" },
-  { text: "Reports", href: "/", icon: "mdi-chart-areaspline" },
+  { text: "Reports", href: "/reports", icon: "mdi-chart-areaspline" },
 ];
 </script>
 

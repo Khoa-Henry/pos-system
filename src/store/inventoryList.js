@@ -177,17 +177,18 @@ export const useInventoryListStore = defineStore("inventoryList", {
       const categoryIndex = this.value.findIndex(
         (cat) => cat.categoryId === newCategory.categoryId
       );
+      console.log(categoryIndex, "idnex");
       if (categoryIndex !== -1) {
         const category = this.value[categoryIndex];
         const categoryDocRef = doc(db, "Categories", category.categoryId);
         await deleteDoc(categoryDocRef);
 
-        // TODO: do we want to delete items in the category??
-        // // Delete all items in this category
-        // for (const item of category.items) {
-        //   const itemDocRef = doc(db, "Items", item.itemId);
-        //   await deleteDoc(itemDocRef);
-        // }
+        // Delete all items in this category
+        console.log(category, "2131");
+        for (const item of category.items) {
+          const itemDocRef = doc(db, "Items", item.itemId);
+          await deleteDoc(itemDocRef);
+        }
       }
     },
 
