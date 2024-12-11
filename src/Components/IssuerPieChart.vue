@@ -71,4 +71,14 @@ watch(
 );
 </script>
 
-<style scoped></style>
+<style scoped>
+.chart-container {
+  height: 400px;
+}
+
+@media (max-width: 960px) {
+  .chart-container {
+    height: 250px;
+  }
+}
+</style>

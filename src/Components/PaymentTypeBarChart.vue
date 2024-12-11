@@ -89,6 +89,12 @@ watch(
 
 <style scoped>
 .chart-container {
-  height: 250px;
+  height: 400px;
+}
+
+@media (max-width: 960px) {
+  .chart-container {
+    height: 250px;
+  }
 }
 </style>
