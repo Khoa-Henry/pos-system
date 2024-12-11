@@ -75,6 +75,21 @@ const performanceColor = computed(() => {
     return "text-black";
   }
 });
+
+// Calculate totals for each issuer
+const issuerTotals = computed(() => {
+  const totals = {
+    Admin: 0,
+    Employee: 0,
+  };
+  ordersStore.orders.forEach((order) => {
+    if (!totals[order.issuer]) {
+      totals[order.issuer] = 0;
+    }
+    totals[order.issuer] += order.total;
+  });
+  return totals;
+});
 </script>
 
 <template>
@@ -96,17 +111,17 @@ const performanceColor = computed(() => {
       <v-row no-gutters>
         <v-col cols="12">
           <v-card>
-            <v-card-title class="title font-weight-bold"
-              >Report Summary</v-card-title
-            >
+            <v-card-title class="title font-weight-bold">
+              Report Summary
+            </v-card-title>
             <v-divider class="my-2"></v-divider>
             <v-card-text>
               <v-row no-gutters>
                 <v-col cols="12">
                   <v-row>
-                    <v-col cols="6" class="text-left font-weight-bold"
-                      >Gross Revenue</v-col
-                    >
+                    <v-col cols="6" class="text-left font-weight-bold">
+                      Gross Revenue
+                    </v-col>
                     <v-col cols="6" class="text-right font-weight-bold">
                       ${{ totalAmount.toFixed(2) }}
                     </v-col>
@@ -116,7 +131,9 @@ const performanceColor = computed(() => {
                     v-for="(total, paymentType) in paymentTypeTotals"
                     :key="paymentType"
                   >
-                    <v-col cols="6" class="text-left">{{ paymentType }}</v-col>
+                    <v-col cols="6" class="text-left pl-8">{{
+                      paymentType
+                    }}</v-col>
                     <v-col cols="6" class="text-right">
                       ${{ total.toFixed(2) }}
                     </v-col>
@@ -133,6 +150,14 @@ const performanceColor = computed(() => {
                       :class="performanceColor"
                     >
                       {{ performancePercentage.toFixed(2) }}%
+                    </v-col>
+                    <v-divider class="my-2"></v-divider>
+                  </v-row>
+
+                  <v-row v-for="(total, issuer) in issuerTotals" :key="issuer">
+                    <v-col cols="6" class="text-left pl-8">{{ issuer }}</v-col>
+                    <v-col cols="6" class="text-right">
+                      ${{ total.toFixed(2) }}
                     </v-col>
                     <v-divider class="my-2"></v-divider>
                   </v-row>
